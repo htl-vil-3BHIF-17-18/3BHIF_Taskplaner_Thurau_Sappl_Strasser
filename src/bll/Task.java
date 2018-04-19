@@ -1,8 +1,12 @@
 package bll;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Task {
+import dal.DatabaseMapable;
+
+public class Task implements DatabaseMapable {
 	private String text;
 	private Date datum;
 	private String typ;
@@ -94,6 +98,20 @@ public class Task {
 	@Override
 	public String toString() {
 		return "Task [text=" + text + ", datum=" + datum + ", typ=" + typ + ", fach=" + fach + "]";
+	}
+
+	/**
+	 * Gibt eine Map (Key: Feld, Value: Spaltenname) zurück.
+	 * @return {@link Map}
+	 */
+	@Override
+	public Map<String, String> columnFieldMap() {
+		Map<String, String> columnField = new HashMap<String, String>();
+		columnField.put("text", "text");
+		columnField.put("datum", "date");
+		columnField.put("typ", "type");
+		columnField.put("fach", "subject");
+		return columnField;
 	}
 
 }
