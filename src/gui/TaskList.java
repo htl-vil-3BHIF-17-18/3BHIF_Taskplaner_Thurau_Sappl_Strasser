@@ -1,23 +1,23 @@
 package gui;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+//import javax.swing.JMenuItem;
+//import javax.swing.JPopupMenu;
 
 import bll.Task;
 
-public class TaskList extends JList<Task> {
+public class TaskList extends JList<Task> implements ActionListener{
 
 	private static final long serialVersionUID = 6296981809654802779L;
 	private DefaultListModel<Task> model = new DefaultListModel<Task>();
-	private JPopupMenu popup;
-	private JMenuItem edit;
+//	private JPopupMenu popup;
+//	private JMenuItem edit;
 
 	public TaskList(TreeSet<Task> treeSet) {
 		this.setData(treeSet);
@@ -37,6 +37,12 @@ public class TaskList extends JList<Task> {
 			rgw.add(model.getElementAt(i));
 		}
 		return rgw;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO implement list selection, insertion and changes
+		
 	}
 
 }

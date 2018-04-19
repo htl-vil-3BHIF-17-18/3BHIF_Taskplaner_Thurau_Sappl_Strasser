@@ -1,20 +1,21 @@
 package gui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.HeadlessException;
-import java.util.ArrayList;
+import java.text.ParseException;
 import java.util.TreeSet;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.text.DateFormatter;
+import javax.swing.text.MaskFormatter;
 
 import bll.Task;
 
@@ -27,6 +28,7 @@ public class MainFrame extends JFrame {
 	private JMenuItem save;
 	private JPanel inputFields;
 	private JComboBox<String> taskType;
+	private JLabel lbFromDate, lbToDate;
 	private JFormattedTextField fromDate;
 	private JFormattedTextField toDate;
 	private JButton showTasks;
@@ -36,13 +38,19 @@ public class MainFrame extends JFrame {
 	public MainFrame(String title) {
 		super();
 		this.setTitle(title);
-		this.initializeControls();
+		try {
+			this.initializeControls();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setPreferredSize(new Dimension(700, 500));
 		this.pack();
 		this.setVisible(true);
 	}
 
-	private void initializeControls() {
+	private void initializeControls() throws ParseException {
 		// Menü-Kram
 		this.menuBar = new JMenuBar();
 		this.start = new JMenu("Start");
@@ -54,23 +62,27 @@ public class MainFrame extends JFrame {
 		this.setJMenuBar(menuBar);
 
 		// Input-Fields
-		this.fromDate = new JFormattedTextField(new DateFormatter());
-		this.toDate = new JFormattedTextField(new DateFormatter());
+		this.lbFromDate = new JLabel("von: ");
+		this.lbToDate = new JLabel("bis: ");
+		this.fromDate = new JFormattedTextField(new MaskFormatter("##.##.####"));
+		this.toDate = new JFormattedTextField(new MaskFormatter("##.##.####"));
 		this.taskType = new JComboBox<String>(comboBoxTypes);
 		this.showTasks = new JButton("Tasks anzeigen");
 		this.inputFields = new JPanel(new FlowLayout());
+		this.inputFields.add(lbFromDate);
 		this.inputFields.add(fromDate);
+		this.inputFields.add(lbToDate);
 		this.inputFields.add(toDate);
 		this.inputFields.add(taskType);
 		this.inputFields.add(showTasks);
 
 		this.list = new TaskList(new TreeSet<Task>());
-		
-		this.setLayout(new GridLayout(2, 1));
-		this.add(inputFields);
-		this.add(list);
-		
-		//TODO: add eventListeners
+
+		this.setLayout(new BorderLayout());
+		this.add(inputFields, BorderLayout.PAGE_START);
+		this.add(list, BorderLayout.CENTER);
+
+		// TODO: add eventListeners
 	}
 
 }
