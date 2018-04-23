@@ -1,25 +1,17 @@
 package dal;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.List;
 
 public abstract class AbstractDatabaseHandler {
 	
 	private String connectionString = "";
-	private String username = "";
-	private String password = "";
-	private boolean initialized = false;
 	
-	public AbstractDatabaseHandler(String connectionString, String username, String password) {
+	public AbstractDatabaseHandler(String connectionString) {
 		this.connectionString = connectionString;
-		this.username = username;
-		this.password = password;
 	}
 	
 	public abstract boolean initialize();
-	
-	public abstract Connection getConnection();
 	
 	public abstract ResultSet performSelect(String table, String columns, String condition);
 	
