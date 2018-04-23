@@ -1,27 +1,29 @@
 package bll;
 
-import java.util.Date;
-
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import dal.DatabaseMapable;
 
 public class Task implements DatabaseMapable, Comparable<Task> {
-	private String text;
-	private Date datumBis;
-	private Date datumVon;
-	private String typ;
-	private String fach;
 	private boolean erledigt;
+	private GregorianCalendar datumVon;
+	private String fach;
+	private String typ;
+	private GregorianCalendar datumBis;
+	private String text;
 
-	public Task(String text, Date datumVon, Date datumBis, String typ, String fach) {
+	public Task(boolean erledigt, GregorianCalendar datumVon, String fach, String typ, GregorianCalendar datumBis,
+			String text) {
 		super();
-		this.text = text;
+		this.erledigt = erledigt;
 		this.datumVon = datumVon;
-		this.datumBis = datumBis;
-		this.typ = typ;
 		this.fach = fach;
+		this.typ = typ;
+		this.datumBis = datumBis;
+		this.text = text;
 	}
 
 	public String getText() {
@@ -32,19 +34,19 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 		this.text = text;
 	}
 
-	public Date getDatumBis() {
+	public GregorianCalendar getDatumBis() {
 		return datumBis;
 	}
 
-	public void setDatumBis(Date datumBis) {
+	public void setDatumBis(GregorianCalendar datumBis) {
 		this.datumBis = datumBis;
 	}
 
-	public Date getDatumVon() {
+	public GregorianCalendar getDatumVon() {
 		return datumVon;
 	}
 
-	public void setDatumVon(Date datumVon) {
+	public void setDatumVon(GregorianCalendar datumVon) {
 		this.datumVon = datumVon;
 	}
 
@@ -150,6 +152,19 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 
 	public void setErledigt(boolean erledigt) {
 		this.erledigt = erledigt;
+	}
+
+	public Vector<String> toVector() {
+		Vector<String> rgw = new Vector<String>();
+		rgw.add(erledigt ? "erledigt" : "offen");
+		rgw.add(datumVon.get(GregorianCalendar.DAY_OF_MONTH) + "." + (datumVon.get(GregorianCalendar.MONTH) + 1) + "."
+				+ datumVon.get(GregorianCalendar.YEAR));
+		rgw.add(fach);
+		rgw.add(typ);
+		rgw.add(datumBis.get(GregorianCalendar.DAY_OF_MONTH) + "." + (datumBis.get(GregorianCalendar.MONTH) + 1) + "."
+				+ datumBis.get(GregorianCalendar.YEAR));
+		rgw.add(text);
+		return rgw;
 	}
 
 }
