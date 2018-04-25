@@ -56,8 +56,8 @@ public class MainFrame extends JFrame {
 		// Menü-Kram
 		this.menuBar = new JMenuBar();
 		this.start = new JMenu("Start");
-		this.load = new JMenuItem("Von DB laden");
-		this.save = new JMenuItem("In DB speichern");
+		this.load = new JMenuItem("Von DB laden ...");
+		this.save = new JMenuItem("In DB speichern ...");
 		this.start.add(load);
 		this.start.add(save);
 		this.menuBar.add(start);
