@@ -20,8 +20,19 @@ public class TaskTable extends JTable {
 	}
 
 	public void setTasks(Set<Task> students) {
-		this.model = new DefaultTableModel();
+		this.model = new DefaultTableModel(){
+
+			
+			private static final long serialVersionUID = -736270369587528844L;
+
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       return false;
+		    }
+		};
+
 		this.model.setColumnIdentifiers(columNames);
+		this.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 		for (Task student : students) {
 			this.model.addRow(student.toVector());
 		}
@@ -46,13 +57,6 @@ public class TaskTable extends JTable {
 			rgw.add(new Task(status, datumVon, fach, typ, datumBis, text));
 		}
 		return rgw;
-	}
-
-	public void removeStudent(int selectedRow) {
-		try {
-			this.model.removeRow(selectedRow);
-		} catch (IndexOutOfBoundsException e) {
-		}
 
 	}
 }

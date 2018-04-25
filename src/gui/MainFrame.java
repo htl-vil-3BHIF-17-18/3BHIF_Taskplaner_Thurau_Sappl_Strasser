@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.text.ParseException;
+import java.util.GregorianCalendar;
+import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.JButton;
@@ -32,7 +34,7 @@ public class MainFrame extends JFrame {
 	private JFormattedTextField fromDate;
 	private JFormattedTextField toDate;
 	private JButton showTasks;
-	private TaskList list;
+	private TaskTable table;
 	private static String[] comboBoxTypes = { "Schularbeit", "Test", "Hausübung" };
 
 	public MainFrame(String title) {
@@ -76,11 +78,16 @@ public class MainFrame extends JFrame {
 		this.inputFields.add(taskType);
 		this.inputFields.add(showTasks);
 
-		this.list = new TaskList(new TreeSet<Task>());
+		Set<Task> set = new TreeSet<Task>();
+		set.add(new Task(true, new GregorianCalendar(2018, 4, 25), "POS", "PLF", new GregorianCalendar(2018, 4, 26), "nix"));
+		set.add(new Task(true, new GregorianCalendar(2018, 5, 25), "POS", "PLF", new GregorianCalendar(2018, 4, 26), "nix"));
+		set.add(new Task(true, new GregorianCalendar(2018, 6, 25), "POS", "PLF", new GregorianCalendar(2018, 4, 26), "nix"));
+
+		this.table = new TaskTable(set);
 
 		this.setLayout(new BorderLayout());
 		this.add(inputFields, BorderLayout.PAGE_START);
-		this.add(list, BorderLayout.CENTER);
+		this.add(table, BorderLayout.CENTER);
 
 		// TODO: add eventListeners
 	}
