@@ -8,26 +8,26 @@ import java.util.List;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-public class DBHandler extends AbstractDatabaseHandler {
+public class DatabaseHandler extends AbstractDatabaseHandler {
 	
 	private String connectionString = "";
 	private boolean initialized = false;
 	private Connection connection = null;
 	
 	/**
-	 * DBHandler Konstruktor
+	 * DatabaseHandler-Konstruktor
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 1
 	 * @param connectionString Zeichenkette für die Verbindung.
 	 */
-	public DBHandler(String connectionString) {
+	public DatabaseHandler(String connectionString) {
 		super(connectionString);
 		this.connectionString = connectionString;
 	}
 	
 	/**
-	 * DBHandler initialisieren.
+	 * DatabaseHandler initialisieren.
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 1
