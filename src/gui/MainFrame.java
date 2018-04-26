@@ -47,7 +47,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JMenuItem newItem;
 	private JMenuItem edit;
 	private JMenuItem delete;
-	private static String[] comboBoxTypes = { "Schularbeit", "Test", "Hausübung" };
+	private static String[] comboBoxTypes = { "Schularbeit", "Test", "Hausï¿½bung" };
 	private DatabaseHandler dbh = null;
 	private DatabaseWrapper dbw = null;
 
@@ -61,6 +61,9 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 		this.dbh = new DatabaseHandler("jdbc:oracle:thin:d3b20/d3b@212.152.179.117:1521:ora11g");
 		this.dbw = new DatabaseWrapper(dbh);
+		// --- [Begin] Debug
+		System.out.println(this.dbw.createTasksTable());
+		// --- [End  ] Debug
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setPreferredSize(new Dimension(700, 500));
 		this.pack();
@@ -69,7 +72,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	}
 
 	private void initializeControls() throws ParseException {
-		// Menü-Kram
+		// Menï¿½-Kram
 		this.menuBar = new JMenuBar();
 		this.start = new JMenu("Start");
 		this.load = new JMenuItem("Von DB laden");
@@ -108,9 +111,9 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.add(inputFields, BorderLayout.PAGE_START);
 		this.add(table, BorderLayout.CENTER);
 
-		// Rechtsklick-Menü:
+		// Rechtsklick-Menï¿½:
 		popup = new JPopupMenu();
-		delete = new JMenuItem("Löschen");
+		delete = new JMenuItem("Lï¿½schen");
 		edit = new JMenuItem("Bearbeiten");
 		newItem = new JMenuItem("Neu");
 		delete.addActionListener(this);
@@ -119,7 +122,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		popup.add(edit);
 		popup.add(delete);
 
-		// EventListener für Rechtsklick:
+		// EventListener fï¿½r Rechtsklick:
 		MouseListener popupListener = new PopupListener(popup);
 		this.table.addMouseListener(popupListener);
 
