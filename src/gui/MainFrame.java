@@ -26,6 +26,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.text.MaskFormatter;
 
 import bll.Task;
+import dal.DatabaseHandler;
+import dal.DatabaseWrapper;
 
 public class MainFrame extends JFrame implements ActionListener {
 
@@ -45,6 +47,8 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JMenuItem edit;
 	private JMenuItem delete;
 	private static String[] comboBoxTypes = { "Schularbeit", "Test", "Hausübung" };
+	private DatabaseHandler dbh = null;
+	private DatabaseWrapper dbw = null;
 
 	public MainFrame(String title) {
 		super();
@@ -52,13 +56,15 @@ public class MainFrame extends JFrame implements ActionListener {
 		try {
 			this.initializeControls();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		this.dbh = new DatabaseHandler("jdbc:oracle:thin:d3b20/d3b@212.152.179.117:1521:ora11g");
+		this.dbw = new DatabaseWrapper(dbh);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setPreferredSize(new Dimension(700, 500));
 		this.pack();
 		this.setVisible(true);
+
 	}
 
 	private void initializeControls() throws ParseException {
@@ -121,10 +127,15 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		if (arg0.getSource().equals(edit)) {
 			try {
-				EditDialog dialog = new EditDialog(this.table.getSelectedRow(), (Task) this.table.getTasks().toArray()[this.table.getSelectedRow()]);
+				EditDialog dialog = new EditDialog(this.table.getSelectedRow(),
+						(Task) this.table.getTasks().toArray()[this.table.getSelectedRow()]);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
+		} else if (arg0.getSource().equals(this.load)) {
+			this.table.setTasks(dbw.getTasks());
+		} else if (arg0.getSource().equals(this.save)) {
+			this.dbw.setTasks(this.table.getTasks());
 		}
 
 	}
