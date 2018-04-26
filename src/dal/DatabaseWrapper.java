@@ -17,6 +17,10 @@ public class DatabaseWrapper {
 		this.databaseHandler = databaseHandler;
 	}
 	
+	/**
+	 * Tabelle {@code Tasks} erstellen.
+	 * @return {@link Boolean} Erfolgreich
+	 */
 	public boolean createTasksTable() {
 		return this.databaseHandler.perform(
 				"CREATE TABLE Tasks ("
@@ -26,9 +30,14 @@ public class DatabaseWrapper {
 				+ "subject VARCHAR2(100),"
 				+ "dateFrom DATE,"
 				+ "dateTo DATE"
-				+ ");");
+				+ ")");
 	}
 	
+	/**
+	 * Setzte {@code Tasks}.
+	 * @param tasks {@link Set} Tasks
+	 * @return {@link Boolean} Erfolgreich
+	 */
 	public boolean setTasks(Set<Task> tasks) {
 		
 		boolean result = false;
@@ -44,6 +53,10 @@ public class DatabaseWrapper {
 		return result;
 	}
 	
+	/**
+	 * Bekomme {@code Tasks}.
+	 * @return {@link Set} Tasks
+	 */
 	public Set<Task> getTasks() {
 		
 		Set<Task> result = new HashSet<Task>();
@@ -53,6 +66,10 @@ public class DatabaseWrapper {
 				new HashSet<String>(Arrays.asList("done", "text", "type", "subject", "dateFrom", "dateTo")),
 				"1 = 1"
 				);
+		
+		// --- [Start] Debug
+		System.out.println(rs);
+		// --- [End  ] Debug
 		
 		try {
 			while(rs.next()) {

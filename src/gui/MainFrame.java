@@ -60,6 +60,7 @@ public class MainFrame extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 		this.dbh = new DatabaseHandler("jdbc:oracle:thin:d3b20/d3b@212.152.179.117:1521:ora11g");
+		this.dbh.initialize();
 		this.dbw = new DatabaseWrapper(dbh);
 		// --- [Begin] Debug
 		System.out.println(this.dbw.createTasksTable());
@@ -106,7 +107,21 @@ public class MainFrame extends JFrame implements ActionListener {
 				"nix"));
 
 		this.table = new TaskTable(set);
-
+		
+		this.load.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				table.setTasks(dbw.getTasks());
+			}
+		});
+		
+		this.save.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dbw.setTasks(table.getTasks());
+			}
+		});
+		
 		this.setLayout(new BorderLayout());
 		this.add(inputFields, BorderLayout.PAGE_START);
 		this.add(table, BorderLayout.CENTER);
