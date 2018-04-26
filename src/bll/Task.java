@@ -132,8 +132,8 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 	@Override
 	public Map<String, String> columnFieldMap() {
 		Map<String, String> columnField = new HashMap<String, String>();
+		columnField.put("erledigt", "done");
 		columnField.put("text", "text");
-		columnField.put("datum", "date");
 		columnField.put("datumVon", "date");
 		columnField.put("datumBis", "date");
 		columnField.put("typ", "type");

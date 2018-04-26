@@ -20,15 +20,22 @@ public class TaskTable extends JTable {
 	}
 
 	public void setTasks(Set<Task> students) {
-		this.model = new DefaultTableModel(){
+		this.model = new DefaultTableModel(columNames, 0) {
 
-			
 			private static final long serialVersionUID = -736270369587528844L;
 
 			@Override
-		    public boolean isCellEditable(int row, int column) {
-		       return false;
-		    }
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+
+//			public Class getColumnClass(int column) {
+//				switch (column) {
+//				case 0:
+//					return Boolean.class;
+//				default:
+//					return String.class;
+//				}
 		};
 
 		this.model.setColumnIdentifiers(columNames);
