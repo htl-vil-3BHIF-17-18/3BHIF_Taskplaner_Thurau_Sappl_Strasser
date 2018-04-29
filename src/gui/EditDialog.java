@@ -1,11 +1,13 @@
 package gui;
 
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -42,10 +44,13 @@ public class EditDialog extends JDialog implements ActionListener {
 	private JButton btnCancel = null;
 	private Task task = null;
 	private TaskTable taskTable = null;
-	private Object[] columNames = { "Status", "Von", "Fach", "Typ", "Bis", "Text" };
+	// private Object[] columNames = { "Status", "Von", "Fach", "Typ", "Bis", "Text"
+	// };
 
-	public EditDialog(int selectedIndex, Task task) throws ParseException {
+	public EditDialog(int selectedIndex, TaskTable taskTable, Task task) throws ParseException {
 		this.task = task;
+		this.taskTable = taskTable;
+		this.setTitle("Task bearbeiten");
 		this.initializeControls();
 		this.fillControls();
 		this.pack();
@@ -54,11 +59,23 @@ public class EditDialog extends JDialog implements ActionListener {
 	}
 
 	private void fillControls() {
-		if(task.isErledigt())
+		if (task.isErledigt())
 			this.rbFertig.setSelected(true);
-		else 
+		else
 			this.rbUnFertig.setSelected(true);
-		this.tfVon.setText(task.getDatumVon().toString());
+		this.tfVon.setText(String.valueOf((task.getDatumVon().get(GregorianCalendar.DAY_OF_MONTH) + 1) < 10 ? "0" : "")
+				+ (task.getDatumVon().get(GregorianCalendar.DAY_OF_MONTH) + 1) + "."
+				+ (task.getDatumVon().get(GregorianCalendar.MONTH) < 10 ? "0" : "")
+				+ String.valueOf(task.getDatumVon().get(GregorianCalendar.MONTH)) + "."
+				+ String.valueOf(task.getDatumVon().get(GregorianCalendar.YEAR)));
+		this.tfFach.setText(task.getFach());
+		this.cbTyp.setSelectedItem(task.getTyp());
+		this.tfBis.setText(String.valueOf((task.getDatumBis().get(GregorianCalendar.DAY_OF_MONTH) + 1) < 10 ? "0" : "")
+				+ (task.getDatumBis().get(GregorianCalendar.DAY_OF_MONTH) + 1) + "."
+				+ (task.getDatumBis().get(GregorianCalendar.MONTH) < 10 ? "0" : "")
+				+ String.valueOf(task.getDatumBis().get(GregorianCalendar.MONTH)) + "."
+				+ String.valueOf(task.getDatumBis().get(GregorianCalendar.YEAR)));
+		this.tfText.setText(task.getText());
 	}
 
 	private void initializeControls() throws ParseException {
@@ -116,27 +133,34 @@ public class EditDialog extends JDialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println(taskTable.getTasks());
-		if(e.getSource().equals(this.btnOk)) {
-			
+		if (e.getSource().equals(this.btnOk)) {
+			Set<Task> newSet = new TreeSet<Task>();
+			Iterator<Task> it = this.taskTable.getTasks().iterator();
+			while (it.hasNext()) {
+				Task t = it.next();
+				if (t.equals(task)) {
+					newSet.add(this.processUserInput());
+				} else {
+					newSet.add(t);
+				}
+			}
+			this.taskTable.setTasks(newSet);
 		}
 		this.dispose();
 	}
 
-//	private boolean writeValuesToStudent() {
-//		boolean isValid = false;
-//		try {
-//			if (!this.tfNumber.getText().trim().isEmpty() && !this.tfFirstName.getText().trim().isEmpty()
-//					&& !this.tfLastName.getText().trim().isEmpty()) {
-//				this.task.setKatalognummer(Integer.parseInt(this.tfNumber.getText()));
-//				this.task.setVorname(this.tfFirstName.getText());
-//				this.task.setNachname(this.tfLastName.getText());
-//				isValid = true;
-//			}
-//
-//		} catch (NumberFormatException ex) {
-//			System.out.println("Textfield Number has the wrong value!" + ex.toString());
-//		}
-//		return isValid;
-//	}
+	private Task processUserInput() {
+		boolean erledigt = this.rbFertig.isSelected();
+		GregorianCalendar von = new GregorianCalendar(Integer.valueOf(this.tfVon.getText().split("\\.")[2]),
+				Integer.valueOf(this.tfVon.getText().split("\\.")[1]),
+				Integer.valueOf(this.tfVon.getText().split("\\.")[0]));
+		String fach = this.tfFach.getText();
+		String typ = (String) this.cbTyp.getSelectedItem();
+		GregorianCalendar bis = new GregorianCalendar(Integer.valueOf(this.tfBis.getText().split("\\.")[2]),
+				Integer.valueOf(this.tfBis.getText().split("\\.")[1]),
+				Integer.valueOf(this.tfBis.getText().split("\\.")[0]));
+		String text = this.tfText.getText();
+		return new Task(erledigt, von, fach, typ, bis, text);
+	}
+
 }

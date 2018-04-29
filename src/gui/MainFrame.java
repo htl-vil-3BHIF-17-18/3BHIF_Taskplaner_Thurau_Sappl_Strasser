@@ -94,13 +94,14 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.inputFields.add(taskType);
 		this.inputFields.add(showTasks);
 
+		// Testdaten für GUI:
 		Set<Task> set = new TreeSet<Task>();
-		set.add(new Task(true, new GregorianCalendar(2018, 4, 25), "POS", "PLF", new GregorianCalendar(2018, 4, 26),
-				"nix"));
-		set.add(new Task(true, new GregorianCalendar(2018, 5, 25), "POS", "PLF", new GregorianCalendar(2018, 4, 26),
-				"nix"));
-		set.add(new Task(true, new GregorianCalendar(2018, 6, 25), "POS", "PLF", new GregorianCalendar(2018, 4, 26),
-				"nix"));
+		set.add(new Task(true, new GregorianCalendar(2018, 4, 25), "POS", "Hausübung",
+				new GregorianCalendar(2018, 4, 26), "nix"));
+		set.add(new Task(true, new GregorianCalendar(2018, 5, 25), "POS", "Hausübung",
+				new GregorianCalendar(2018, 4, 26), "nix"));
+		set.add(new Task(true, new GregorianCalendar(2018, 6, 25), "POS", "Hausübung",
+				new GregorianCalendar(2018, 4, 26), "nix"));
 
 		this.table = new TaskTable(set);
 
@@ -130,7 +131,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		if (arg0.getSource().equals(edit)) {
 			try {
-				EditDialog dialog = new EditDialog(this.table.getSelectedRow(),
+				new EditDialog(this.table.getSelectedRow(), this.table,
 						(Task) this.table.getTasks().toArray()[this.table.getSelectedRow()]);
 			} catch (ParseException e) {
 				e.printStackTrace();

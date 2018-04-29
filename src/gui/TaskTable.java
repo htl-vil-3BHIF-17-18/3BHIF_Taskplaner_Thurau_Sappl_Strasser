@@ -51,15 +51,15 @@ public class TaskTable extends JTable {
 		for (int row = 0; row < this.model.getRowCount(); row++) {
 			boolean status = this.model.getValueAt(row, 0) == "erledigt" ? true : false;
 			GregorianCalendar datumVon = new GregorianCalendar(
-					Integer.parseInt(((String) model.getValueAt(row, 1)).split(".")[2]),
-					Integer.parseInt(((String) model.getValueAt(row, 1)).split(".")[1]),
-					Integer.parseInt(((String) model.getValueAt(row, 1)).split(".")[0]));
+					Integer.parseInt(((String) model.getValueAt(row, 1)).split("\\.")[2]),
+					Integer.parseInt(((String) model.getValueAt(row, 1)).split("\\.")[1]),
+					Integer.parseInt(((String) model.getValueAt(row, 1)).split("\\.")[0]));
 			String fach = (String) this.model.getValueAt(row, 2);
 			String typ = (String) this.model.getValueAt(row, 3);
 			GregorianCalendar datumBis = new GregorianCalendar(
-					Integer.parseInt(((String) model.getValueAt(row, 4)).split(".")[2]),
-					Integer.parseInt(((String) model.getValueAt(row, 4)).split(".")[1]),
-					Integer.parseInt(((String) model.getValueAt(row, 4)).split(".")[0]));
+					Integer.parseInt(((String) model.getValueAt(row, 4)).split("\\.")[2]),
+					Integer.parseInt(((String) model.getValueAt(row, 4)).split("\\.")[1]),
+					Integer.parseInt(((String) model.getValueAt(row, 4)).split("\\.")[0]));
 			String text = (String) this.model.getValueAt(row, 5);
 			rgw.add(new Task(status, datumVon, fach, typ, datumBis, text));
 		}
