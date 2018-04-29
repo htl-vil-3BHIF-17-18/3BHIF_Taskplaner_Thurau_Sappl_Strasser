@@ -49,7 +49,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JMenuItem newItem;
 	private JMenuItem edit;
 	private JMenuItem delete;
-	private static String[] comboBoxTypes = { "Schularbeit", "Test", "Hausübung" };
+	private static String[] comboBoxTypes = { "Alle", "Schularbeit", "Test", "Hausübung" };
 	private DatabaseHandler dbh = null;
 	private DatabaseWrapper dbw = null;
 
@@ -131,6 +131,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		delete.addActionListener(this);
 		edit.addActionListener(this);
 		newItem.addActionListener(this);
+		showTasks.addActionListener(this);
 	}
 
 	@Override
@@ -146,7 +147,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		} else if (arg0.getSource().equals(this.save)) {
 			this.dbw.setTasks(this.table.getTasks());
 		} else if (arg0.getSource().equals(this.showTasks)) {
-			// TODO: Daten einlesen
+			this.table.setTasks(this.processUserInput());
 		} else if (arg0.getSource().equals(newItem)) {
 			try {
 				new EditDialog(table,
@@ -155,9 +156,22 @@ public class MainFrame extends JFrame implements ActionListener {
 				e.printStackTrace();
 			}
 		} else if (arg0.getSource().equals(delete)) {
-
+			this.table.removeSelectedTask();
 		}
 
+	}
+
+	private Set<Task> processUserInput() {
+		GregorianCalendar von = new GregorianCalendar(Integer.valueOf(this.fromDate.getText().split("\\.")[2]),
+				Integer.valueOf(this.fromDate.getText().split("\\.")[1]),
+				Integer.valueOf(this.fromDate.getText().split("\\.")[0]));
+		String typ = (String) this.taskType.getSelectedItem();
+		GregorianCalendar bis = new GregorianCalendar(Integer.valueOf(this.fromDate.getText().split("\\.")[2]),
+				Integer.valueOf(this.fromDate.getText().split("\\.")[1]),
+				Integer.valueOf(this.fromDate.getText().split("\\.")[0]));
+		// TODO: mit den von oben eingelesenen Daten ein SELECT durchführen
+		// mögliche Typen von Task (Combobox): Test, Schularbeit, Hausübung, ALLE
+		return null;
 	}
 
 	class PopupListener extends MouseAdapter {

@@ -159,9 +159,13 @@ public class EditDialog extends JDialog implements ActionListener {
 				Integer.valueOf(this.tfVon.getText().split("\\.")[0]));
 		String fach = this.tfFach.getText();
 		String typ = (String) this.cbTyp.getSelectedItem();
-		GregorianCalendar bis = new GregorianCalendar(Integer.valueOf(this.tfBis.getText().split("\\.")[2]),
-				Integer.valueOf(this.tfBis.getText().split("\\.")[1]),
-				Integer.valueOf(this.tfBis.getText().split("\\.")[0]));
+		GregorianCalendar bis;
+		if (typ.equalsIgnoreCase("hausübung"))
+			bis = new GregorianCalendar(Integer.valueOf(this.tfBis.getText().split("\\.")[2]),
+					Integer.valueOf(this.tfBis.getText().split("\\.")[1]),
+					Integer.valueOf(this.tfBis.getText().split("\\.")[0]));
+		else // Schularbeiten und Tests finden nur an einem Datum statt
+			bis = von;
 		String text = this.tfText.getText();
 		return new Task(erledigt, von, fach, typ, bis, text);
 	}

@@ -20,7 +20,7 @@ public class TaskTable extends JTable {
 		this.setTasks(tasks);
 	}
 
-	public void setTasks(Set<Task> students) {
+	public void setTasks(Set<Task> tasks) {
 		this.model = new DefaultTableModel(columNames, 0) {
 
 			private static final long serialVersionUID = -736270369587528844L;
@@ -41,7 +41,7 @@ public class TaskTable extends JTable {
 		this.model.setColumnIdentifiers(columNames);
 		this.setDefaultRenderer(Object.class, new TaskTableCellRenderer());
 		this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		for (Task student : students) {
+		for (Task student : tasks) {
 			this.model.addRow(student.toVector());
 		}
 		this.setModel(model);
@@ -66,5 +66,10 @@ public class TaskTable extends JTable {
 		}
 		return rgw;
 
+	}
+
+	public void removeSelectedTask() {
+		this.model.removeRow(this.getSelectedRow());
+		
 	}
 }
