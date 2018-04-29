@@ -42,11 +42,11 @@ public class DatabaseWrapper {
 		
 		boolean result = false;
 		
-		result = this.databaseHandler.perform("TRUNCATE TABLE Tasks;");
+		result = this.databaseHandler.perform("TRUNCATE TABLE Tasks");
 		
 		if(result) {
 			for(Task t : tasks) {
-				result = this.databaseHandler.performInsert("Task", t.databaseColumns(), t.databaseValues());
+				result = this.databaseHandler.performInsert("Tasks", t.databaseColumns(), t.databaseValues());
 			}
 		}
 		
