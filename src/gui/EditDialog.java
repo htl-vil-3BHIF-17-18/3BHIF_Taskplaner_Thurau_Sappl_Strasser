@@ -44,10 +44,10 @@ public class EditDialog extends JDialog implements ActionListener {
 	private JButton btnCancel = null;
 	private Task task = null;
 	private TaskTable taskTable = null;
-	// private Object[] columNames = { "Status", "Von", "Fach", "Typ", "Bis", "Text"
-	// };
+	private boolean addMode = false;
 
-	public EditDialog(int selectedIndex, TaskTable taskTable, Task task) throws ParseException {
+	public EditDialog(TaskTable taskTable, Task task, boolean addMode) throws ParseException {
+		this.addMode = addMode;
 		this.task = task;
 		this.taskTable = taskTable;
 		this.setTitle("Task bearbeiten");
@@ -63,15 +63,15 @@ public class EditDialog extends JDialog implements ActionListener {
 			this.rbFertig.setSelected(true);
 		else
 			this.rbUnFertig.setSelected(true);
-		this.tfVon.setText(String.valueOf((task.getDatumVon().get(GregorianCalendar.DAY_OF_MONTH) + 1) < 10 ? "0" : "")
-				+ (task.getDatumVon().get(GregorianCalendar.DAY_OF_MONTH) + 1) + "."
+		this.tfVon.setText(String.valueOf(task.getDatumVon().get(GregorianCalendar.DAY_OF_MONTH) < 10 ? "0" : "")
+				+ task.getDatumVon().get(GregorianCalendar.DAY_OF_MONTH) + "."
 				+ (task.getDatumVon().get(GregorianCalendar.MONTH) < 10 ? "0" : "")
 				+ String.valueOf(task.getDatumVon().get(GregorianCalendar.MONTH)) + "."
 				+ String.valueOf(task.getDatumVon().get(GregorianCalendar.YEAR)));
 		this.tfFach.setText(task.getFach());
 		this.cbTyp.setSelectedItem(task.getTyp());
-		this.tfBis.setText(String.valueOf((task.getDatumBis().get(GregorianCalendar.DAY_OF_MONTH) + 1) < 10 ? "0" : "")
-				+ (task.getDatumBis().get(GregorianCalendar.DAY_OF_MONTH) + 1) + "."
+		this.tfBis.setText(String.valueOf(task.getDatumBis().get(GregorianCalendar.DAY_OF_MONTH) < 10 ? "0" : "")
+				+ task.getDatumBis().get(GregorianCalendar.DAY_OF_MONTH) + "."
 				+ (task.getDatumBis().get(GregorianCalendar.MONTH) < 10 ? "0" : "")
 				+ String.valueOf(task.getDatumBis().get(GregorianCalendar.MONTH)) + "."
 				+ String.valueOf(task.getDatumBis().get(GregorianCalendar.YEAR)));
@@ -143,6 +143,9 @@ public class EditDialog extends JDialog implements ActionListener {
 				} else {
 					newSet.add(t);
 				}
+			}
+			if (addMode) {
+				newSet.add(this.processUserInput());
 			}
 			this.taskTable.setTasks(newSet);
 		}

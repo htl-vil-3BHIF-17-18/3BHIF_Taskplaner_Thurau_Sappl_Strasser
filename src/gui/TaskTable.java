@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import bll.Task;
@@ -29,17 +30,17 @@ public class TaskTable extends JTable {
 				return false;
 			}
 
-//			public Class getColumnClass(int column) {
-//				switch (column) {
-//				case 0:
-//					return Boolean.class;
-//				default:
-//					return String.class;
-//				}
+			// public Class getColumnClass(int column) {
+			// switch (column) {
+			// case 0:
+			// return Boolean.class;
+			// default:
+			// return String.class;
+			// }
 		};
-
 		this.model.setColumnIdentifiers(columNames);
-		this.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+		this.setDefaultRenderer(Object.class, new TaskTableCellRenderer());
+		this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		for (Task student : students) {
 			this.model.addRow(student.toVector());
 		}

@@ -23,6 +23,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.text.MaskFormatter;
 
 import bll.Task;
@@ -42,6 +43,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JFormattedTextField fromDate;
 	private JFormattedTextField toDate;
 	private JButton showTasks;
+	private JScrollPane scrollPane;
 	private TaskTable table;
 	private JPopupMenu popup;
 	private JMenuItem newItem;
@@ -96,27 +98,28 @@ public class MainFrame extends JFrame implements ActionListener {
 
 		// Testdaten für GUI:
 		Set<Task> set = new TreeSet<Task>();
-		set.add(new Task(true, new GregorianCalendar(2018, 4, 25), "POS", "Hausübung",
-				new GregorianCalendar(2018, 4, 26), "nix"));
-		set.add(new Task(true, new GregorianCalendar(2018, 5, 25), "POS", "Hausübung",
-				new GregorianCalendar(2018, 4, 26), "nix"));
-		set.add(new Task(true, new GregorianCalendar(2018, 6, 25), "POS", "Hausübung",
-				new GregorianCalendar(2018, 4, 26), "nix"));
+		set.add(new Task(false, new GregorianCalendar(2018, 4, 20), "POS", "Hausübung",
+				new GregorianCalendar(2018, 5, 5), "Taskplaner implementieren"));
+		set.add(new Task(false, new GregorianCalendar(2018, 4, 25), "TINF", "Hausübung",
+				new GregorianCalendar(2018, 4, 26), "Übung 13785"));
+		set.add(new Task(true, new GregorianCalendar(2018, 4, 26), "Deutsch", "Schularbeit",
+				new GregorianCalendar(2018, 4, 26), "Textbezogene Erörterung"));
+		set.add(new Task(false, new GregorianCalendar(2018, 5, 26), "SYP", "Test", new GregorianCalendar(2018, 5, 26),
+				"nix"));
 
 		this.table = new TaskTable(set);
+		this.scrollPane = new JScrollPane(table);
 
 		this.setLayout(new BorderLayout());
 		this.add(inputFields, BorderLayout.PAGE_START);
-		this.add(table, BorderLayout.CENTER);
+		this.add(scrollPane, BorderLayout.CENTER);
 
 		// Rechtsklick-Menü:
 		popup = new JPopupMenu();
 		delete = new JMenuItem("Löschen");
 		edit = new JMenuItem("Bearbeiten");
 		newItem = new JMenuItem("Neu");
-		delete.addActionListener(this);
-		edit.addActionListener(this);
-		newItem.addActionListener(this);
+		popup.add(newItem);
 		popup.add(edit);
 		popup.add(delete);
 
@@ -124,15 +127,17 @@ public class MainFrame extends JFrame implements ActionListener {
 		MouseListener popupListener = new PopupListener(popup);
 		this.table.addMouseListener(popupListener);
 
-		// TODO: add eventListeners
+		// DONE: add eventListeners
+		delete.addActionListener(this);
+		edit.addActionListener(this);
+		newItem.addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (arg0.getSource().equals(edit)) {
 			try {
-				new EditDialog(this.table.getSelectedRow(), this.table,
-						(Task) this.table.getTasks().toArray()[this.table.getSelectedRow()]);
+				new EditDialog(this.table, (Task) this.table.getTasks().toArray()[this.table.getSelectedRow()], false);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -143,7 +148,12 @@ public class MainFrame extends JFrame implements ActionListener {
 		} else if (arg0.getSource().equals(this.showTasks)) {
 			// TODO: Daten einlesen
 		} else if (arg0.getSource().equals(newItem)) {
-
+			try {
+				new EditDialog(table,
+						new Task(false, new GregorianCalendar(), "", "Hausübung", new GregorianCalendar(), ""), true);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		} else if (arg0.getSource().equals(delete)) {
 
 		}
