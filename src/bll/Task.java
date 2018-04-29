@@ -159,11 +159,11 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 	public Vector<String> toVector() {
 		Vector<String> rgw = new Vector<String>();
 		rgw.add(erledigt ? "erledigt" : "offen");
-		rgw.add(datumVon.get(GregorianCalendar.DAY_OF_MONTH) + "." + (datumVon.get(GregorianCalendar.MONTH) + 1) + "."
+		rgw.add(datumVon.get(GregorianCalendar.DAY_OF_MONTH) + "." + datumVon.get(GregorianCalendar.MONTH) + "."
 				+ datumVon.get(GregorianCalendar.YEAR));
 		rgw.add(fach);
 		rgw.add(typ);
-		rgw.add(datumBis.get(GregorianCalendar.DAY_OF_MONTH) + "." + (datumBis.get(GregorianCalendar.MONTH) + 1) + "."
+		rgw.add(datumBis.get(GregorianCalendar.DAY_OF_MONTH) + "." + datumBis.get(GregorianCalendar.MONTH) + "."
 				+ datumBis.get(GregorianCalendar.YEAR));
 		rgw.add(text);
 		return rgw;
