@@ -2,7 +2,9 @@ package bll;
 
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import dal.DatabaseMapable;
@@ -125,7 +127,7 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 	}
 
 	/**
-	 * Gibt eine Map (Key: Feld, Value: Spaltenname) zurück.
+	 * Gibt eine Map (Key: Feld, Value: Spaltenname) zurï¿½ck.
 	 * 
 	 * @return {@link Map}
 	 */
@@ -134,8 +136,8 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 		Map<String, String> columnField = new HashMap<String, String>();
 		columnField.put("erledigt", "done");
 		columnField.put("text", "text");
-		columnField.put("datumVon", "date");
-		columnField.put("datumBis", "date");
+		columnField.put("datumVon", "dateFrom");
+		columnField.put("datumBis", "dateTo");
 		columnField.put("typ", "type");
 		columnField.put("fach", "subject");
 		return columnField;
@@ -165,6 +167,23 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 				+ datumBis.get(GregorianCalendar.YEAR));
 		rgw.add(text);
 		return rgw;
+	}
+
+	@Override
+	public Set<String> databaseColumns() {
+		return this.columnFieldMap().keySet();
+	}
+
+	@Override
+	public Set<String> databaseValues() {
+		Set<String> result = new HashSet<String>();
+		result.add(this.erledigt + "");
+		result.add(new java.sql.Date(this.datumVon.getTimeInMillis()).toString());
+		result.add(this.fach);
+		result.add(this.typ);
+		result.add(new java.sql.Date(this.datumBis.getTimeInMillis()).toString());
+		result.add(this.text);
+		return result;
 	}
 
 }

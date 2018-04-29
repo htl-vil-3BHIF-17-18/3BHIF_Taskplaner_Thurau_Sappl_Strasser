@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.sun.rowset.CachedRowSetImpl;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -17,7 +19,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * @author Joel Strasser
  * @version 2
  * @since 1
- * @param connectionString Zeichenkette f�r die Verbindung.
  */
 public class DatabaseHandler extends AbstractDatabaseHandler {
 	
@@ -30,7 +31,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 1
-	 * @param connectionString Zeichenkette f�r die Verbindung.
+	 * @param connectionString {@link String} Zeichenkette für die Verbindung.
 	 */
 	public DatabaseHandler(String connectionString) {
 		super(connectionString);
@@ -49,7 +50,8 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 		if(this.initialized) { return true; }
 		
 		try {
-            Class.forName("oracle.jdbc.driver.OracleDriver"); 
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            this.initialized = true;
             return true;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -77,7 +79,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	}
 	
 	/**
-	 * Verbindung öffnen.
+	 * Verbindung schließen.
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 2
@@ -100,7 +102,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 2
-	 * @param {@link String} statement Statement
+	 * @param statement {@link String} Statement
 	 * @return {@link Boolean} Erfolgreich
 	 */
 	@Override
@@ -116,7 +118,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-        	this.closeConnection();
+            this.closeConnection();
         }
 		
 		return result;
@@ -127,27 +129,48 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param {@link String} table Datenbanktabelle
-	 * @param {@link Set} columns Spalten
-	 * @param {@link String} condition Bedingung
+	 * @param table {@link String} Datenbanktabelle
+	 * @param columns {@link Set} Spalten
+	 * @param condition {@link String} Bedingung
 	 * @return {@link ResultSet} Ergebnis
 	 */
-	@SuppressWarnings("null")
 	@Override
 	public ResultSet performSelect(String table, Set<String> columns, String condition) {
 		if(!this.initialized) { return null; }
 
-        ResultSet rs = null;
+		CachedRowSetImpl crs = null;
+		try {
+			crs = new CachedRowSetImpl();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
         
+        Iterator<String> it = columns.iterator();
+		
+		String statementString = "";
+		
+		while(it.hasNext()) {
+			String s = it.next();
+			
+			if(it.hasNext()) {
+				statementString = String.format("%s %s,", statementString, s);
+			} else {
+				statementString = String.format("%s %s", statementString, s);
+			}
+		}
+		
+		statementString = String.format("SELECT %s FROM %s WHERE %s", statementString, table, condition);
+		
         this.openConnection();
         
 		try {
-			rs = this.connection.createStatement().executeQuery(String.format("SELECT %s FROM %s WHERE %s", columns, table, condition));
+			crs.populate(this.connection.createStatement().executeQuery(statementString));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			
 			try {
-				rs.close();
+				crs.close();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
@@ -156,8 +179,8 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 		} finally {
 			this.closeConnection();
 		}
-        
-       return rs;
+		
+        return crs;
 	}
 	
 	/**
@@ -165,8 +188,8 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param {@link String} table Datenbanktabelle
-	 * @param {@link String} condition Bedingung
+	 * @param table {@link String} Datenbanktabelle
+	 * @param condition {@link String} Bedingung
 	 * @return {@link ResultSet} Ergebnis
 	 */
 	@Override
@@ -180,9 +203,9 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 1
-	 * @param {@link String} table Datenbanktabelle
-	 * @param {@link Set} columns Spalten
-	 * @param {@link String} condition Bedingung
+	 * @param table {@link String} Datenbanktabelle
+	 * @param columns {@link Set} Spalten
+	 * @param condition {@link String} Bedingung
 	 * @return {@link List} Ergebnis
 	 * @deprecated
 	 * @see performSelect
@@ -198,9 +221,9 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param {@link String} table Datenbanktabelle
-	 * @param {@link Set} columns Spalten
-	 * @param {@link Set} values Werte
+	 * @param table {@link String} Datenbanktabelle
+	 * @param columns {@link Set} Spalten
+	 * @param values {@link Set} Werte
 	 * @return {@link Boolean} Erfolgreich
 	 */
 	@Override
@@ -218,8 +241,16 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 		String statementString = "";
 		
 		while(it.hasNext() && it2.hasNext()) {
-			statementColumns = String.format("%s, %s", statementColumns, it.next());
-			statementValues = String.format("%s, %s", statementValues, it2.next());
+			String s = it.next();
+			String s2 = it2.next();
+			
+			if(it.hasNext() && it2.hasNext()) {
+				statementColumns = String.format("%s %s,", statementColumns, s);
+				statementValues = String.format("%s %s,", statementValues, s2);
+			} else {
+				statementColumns = String.format("%s %s", statementColumns, s);
+				statementValues = String.format("%s %s", statementValues, s2);
+			}
 		}
 		
 		statementString = String.format("INSERT INTO %s(%s) VALUES(%s)", table, statementColumns, statementValues);
@@ -231,7 +262,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-        	this.openConnection();
+        	this.closeConnection();
         }
 		
 		return result;
@@ -242,8 +273,8 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param {@link String} table Datenbanktabelle
-	 * @param {@link Set} values Werte
+	 * @param table {@link String} Datenbanktabelle
+	 * @param values {@link Set} Werte
 	 * @return {@link Boolean} Erfolgreich
 	 */
 	@Override
@@ -257,7 +288,13 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 		String statementString = "";
 		
 		while(it.hasNext()) {
-			statementString = String.format("%s, %s", statementString, it.next());
+			String s = it.next();
+			
+			if(it.hasNext()) {
+				statementString = String.format("%s %s,", statementString, s);
+			} else {
+				statementString = String.format("%s %s", statementString, s);
+			}
 		}
 		
 		statementString = String.format("INSERT INTO %s VALUES(%s)", table, statementString);
@@ -280,10 +317,10 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param {@link String} table Datenbanktabelle
-	 * @param {@link Set} columns Spalten
-	 * @param {@link Set} values Werte
-	 * @param {@link String} condition Bedingung
+	 * @param table {@link String} Datenbanktabelle
+	 * @param columns {@link Set} Spalten
+	 * @param values {@link Set} Werte
+	 * @param condition {@link String} Bedingung
 	 * @return {@link Boolean} Erfolgreich
 	 */
 	@Override
@@ -302,10 +339,17 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 		String statementString = "";
 		
 		while(it.hasNext() && it2.hasNext()) {
-			statementString = String.format("%s, %s = %s", statementString, it.next(), it2.next());
+			String s = it.next();
+			String s2 = it2.next();
+			
+			if(it.hasNext() && it2.hasNext()) {
+				statementString = String.format("%s %s = %s,", statementString, s, s2);
+			} else {
+				statementString = String.format("%s %s = %s", statementString, s, s2);
+			}
 		}
 		
-		statementString = String.format("UPDATE %S SET %s WHERE %s", table, statementString, condition);
+		statementString = String.format("UPDATE %s SET %s WHERE %s", table, statementString, condition);
 		
 		this.openConnection();
 		
@@ -325,8 +369,8 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param {@link String} table Datenbanktabelle
-	 * @param {@link String} condition Bedingung
+	 * @param table {@link String} Datenbanktabelle
+	 * @param condition {@link String} Bedingung
 	 * @return {@link Boolean} Erfolgreich
 	 */
 	@Override

@@ -49,7 +49,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JMenuItem newItem;
 	private JMenuItem edit;
 	private JMenuItem delete;
-	private static String[] comboBoxTypes = { "Alle", "Schularbeit", "Test", "Hausübung" };
+	private static String[] comboBoxTypes = { "Alle", "Schularbeit", "Test", "HausÃ¼bung" };
 	private DatabaseHandler dbh = null;
 	private DatabaseWrapper dbw = null;
 
@@ -62,7 +62,11 @@ public class MainFrame extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 		this.dbh = new DatabaseHandler("jdbc:oracle:thin:d3b20/d3b@212.152.179.117:1521:ora11g");
+		this.dbh.initialize();
 		this.dbw = new DatabaseWrapper(dbh);
+		// --- [Begin] Debug
+		System.out.println(this.dbw.createTasksTable());
+		// --- [End  ] Debug
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setPreferredSize(new Dimension(700, 500));
 		this.pack();
@@ -71,7 +75,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	}
 
 	private void initializeControls() throws ParseException {
-		// Menü-Kram
+		// MenÃ¯Â¿Â½-Kram
 		this.menuBar = new JMenuBar();
 		this.start = new JMenu("Start");
 		this.load = new JMenuItem("Von DB laden");
@@ -96,34 +100,33 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.inputFields.add(taskType);
 		this.inputFields.add(showTasks);
 
-		// Testdaten für GUI:
+		// Testdaten fÃ¼r GUI:
 		Set<Task> set = new TreeSet<Task>();
-		set.add(new Task(false, new GregorianCalendar(2018, 4, 20), "POS", "Hausübung",
+		set.add(new Task(false, new GregorianCalendar(2018, 4, 20), "POS", "HausÃ¼bung",
 				new GregorianCalendar(2018, 5, 5), "Taskplaner implementieren"));
-		set.add(new Task(false, new GregorianCalendar(2018, 4, 25), "TINF", "Hausübung",
-				new GregorianCalendar(2018, 4, 26), "Übung 13785"));
+		set.add(new Task(false, new GregorianCalendar(2018, 4, 25), "TINF", "HausÃ¼bung",
+				new GregorianCalendar(2018, 4, 26), "Ãœbung 13785"));
 		set.add(new Task(true, new GregorianCalendar(2018, 4, 26), "Deutsch", "Schularbeit",
-				new GregorianCalendar(2018, 4, 26), "Textbezogene Erörterung"));
+				new GregorianCalendar(2018, 4, 26), "Textbezogene ErÃ¶rterung"));
 		set.add(new Task(false, new GregorianCalendar(2018, 5, 26), "SYP", "Test", new GregorianCalendar(2018, 5, 26),
 				"nix"));
 
 		this.table = new TaskTable(set);
 		this.scrollPane = new JScrollPane(table);
-
 		this.setLayout(new BorderLayout());
 		this.add(inputFields, BorderLayout.PAGE_START);
 		this.add(scrollPane, BorderLayout.CENTER);
 
-		// Rechtsklick-Menü:
+		// Rechtsklick-MenÃ¯Â¿Â½:
 		popup = new JPopupMenu();
-		delete = new JMenuItem("Löschen");
+		delete = new JMenuItem("LÃ¯Â¿Â½schen");
 		edit = new JMenuItem("Bearbeiten");
 		newItem = new JMenuItem("Neu");
 		popup.add(newItem);
 		popup.add(edit);
 		popup.add(delete);
 
-		// EventListener für Rechtsklick:
+		// EventListener fÃ¯Â¿Â½r Rechtsklick:
 		MouseListener popupListener = new PopupListener(popup);
 		this.table.addMouseListener(popupListener);
 
@@ -151,7 +154,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		} else if (arg0.getSource().equals(newItem)) {
 			try {
 				new EditDialog(table,
-						new Task(false, new GregorianCalendar(), "", "Hausübung", new GregorianCalendar(), ""), true);
+						new Task(false, new GregorianCalendar(), "", "HausÃ¼bung", new GregorianCalendar(), ""), true);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -169,8 +172,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		GregorianCalendar bis = new GregorianCalendar(Integer.valueOf(this.fromDate.getText().split("\\.")[2]),
 				Integer.valueOf(this.fromDate.getText().split("\\.")[1]),
 				Integer.valueOf(this.fromDate.getText().split("\\.")[0]));
-		// TODO: mit den von oben eingelesenen Daten ein SELECT durchführen
-		// mögliche Typen von Task (Combobox): Test, Schularbeit, Hausübung, ALLE
+		// TODO: mit den von oben eingelesenen Daten ein SELECT durchfÃ¼hren
+		// mÃ¶gliche Typen von Task (Combobox): Test, Schularbeit, HausÃ¼bung, ALLE
 		return null;
 	}
 
