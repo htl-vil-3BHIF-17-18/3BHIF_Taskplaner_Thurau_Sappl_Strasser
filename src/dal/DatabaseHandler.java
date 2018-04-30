@@ -207,7 +207,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 * @param columns {@link Set} Spalten
 	 * @param condition {@link String} Bedingung
 	 * @return {@link List} Ergebnis
-	 * @deprecated
+	 * @deprecated Nicht implementiert.
 	 * @see performSelect
 	 */
 	@Override
@@ -296,6 +296,8 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 				statementString = String.format("%s %s", statementString, s);
 			}
 		}
+		
+		System.out.println(statementString);
 		
 		statementString = String.format("INSERT INTO %s VALUES(%s)", table, statementString);
 		

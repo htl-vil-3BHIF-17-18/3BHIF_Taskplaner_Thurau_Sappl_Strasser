@@ -1,8 +1,9 @@
 package bll;
 
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -171,18 +172,26 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 
 	@Override
 	public Set<String> databaseColumns() {
-		return this.columnFieldMap().keySet();
+		return new LinkedHashSet<String>(
+				Arrays.asList(
+						"done",
+						"text",
+						"type",
+						"subject",
+						"dateFrom",
+						"dateTo")
+		);
 	}
 
 	@Override
 	public Set<String> databaseValues() {
-		Set<String> result = new HashSet<String>();
-		result.add(this.erledigt + "");
-		result.add(new java.sql.Date(this.datumVon.getTimeInMillis()).toString());
-		result.add(this.fach);
-		result.add(this.typ);
-		result.add(new java.sql.Date(this.datumBis.getTimeInMillis()).toString());
-		result.add(this.text);
+		Set<String> result = new LinkedHashSet<String>();
+		result.add(this.erledigt ? "'1'" : "'0'");
+		result.add("'" + this.text + "'");
+		result.add("'" + this.typ + "'");
+		result.add("'" + this.fach + "'");
+		result.add("to_date('" + new java.sql.Date(this.datumVon.getTimeInMillis()).toString() + "', 'yyyy-mm-dd')");
+		result.add("to_date('" + new java.sql.Date(this.datumBis.getTimeInMillis()).toString() + "', 'yyyy-mm-dd')");
 		return result;
 	}
 

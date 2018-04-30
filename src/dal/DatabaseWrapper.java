@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import bll.Task;
@@ -42,13 +43,14 @@ public class DatabaseWrapper {
 		
 		boolean result = false;
 		
-		result = this.databaseHandler.perform("TRUNCATE TABLE Tasks");
+		//result = this.databaseHandler.perform("TRUNCATE TABLE Tasks");
+		this.databaseHandler.perform("TRUNCATE TABLE Tasks");
 		
-		if(result) {
+		//if(result) {
 			for(Task t : tasks) {
-				result = this.databaseHandler.performInsert("Tasks", t.databaseColumns(), t.databaseValues());
+				result = this.databaseHandler.performSimpleInsert("Tasks", t.databaseValues());
 			}
-		}
+		//}
 		
 		return result;
 	}
@@ -63,7 +65,7 @@ public class DatabaseWrapper {
 		
 		ResultSet rs = this.databaseHandler.performSelect(
 				"Tasks",
-				new HashSet<String>(Arrays.asList("done", "text", "type", "subject", "dateFrom", "dateTo")),
+				new LinkedHashSet<String>(Arrays.asList("done", "text", "type", "subject", "dateFrom", "dateTo")),
 				"1 = 1"
 				);
 		
