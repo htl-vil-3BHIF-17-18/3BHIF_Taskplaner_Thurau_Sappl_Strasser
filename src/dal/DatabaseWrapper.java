@@ -48,6 +48,7 @@ public class DatabaseWrapper {
 		
 		//if(result) {
 			for(Task t : tasks) {
+				System.out.println(t.toVector());
 				result = this.databaseHandler.performSimpleInsert("Tasks", t.databaseValues());
 			}
 		//}
@@ -67,6 +68,53 @@ public class DatabaseWrapper {
 				"Tasks",
 				new LinkedHashSet<String>(Arrays.asList("done", "text", "type", "subject", "dateFrom", "dateTo")),
 				"1 = 1"
+				);
+		
+		// --- [Start] Debug
+		System.out.println(rs);
+		// --- [End  ] Debug
+		
+		try {
+			while(rs.next()) {
+				result.add(
+						new Task(
+								rs.getBoolean(1), // erledigt
+								new GregorianCalendar( // von
+										rs.getDate(5).toLocalDate().getYear(),
+										rs.getDate(5).toLocalDate().getMonthValue(),
+										rs.getDate(5).toLocalDate().getDayOfMonth()
+										),
+								rs.getString(4), // fach
+								rs.getString(3), // typ
+								new GregorianCalendar( // bis
+										rs.getDate(6).toLocalDate().getYear(),
+										rs.getDate(6).toLocalDate().getMonthValue(),
+										rs.getDate(6).toLocalDate().getDayOfMonth()
+										),
+								rs.getString(2)
+								) // text
+						);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Bekomme {@code Tasks} mit Bendigung.
+	 * @return {@link Set} Tasks
+	 */
+	public Set<Task> getTasks(String condition) {
+		
+		Set<Task> result = new HashSet<Task>();
+		
+		ResultSet rs = this.databaseHandler.performSelect(
+				"Tasks",
+				new LinkedHashSet<String>(Arrays.asList("done", "text", "type", "subject", "dateFrom", "dateTo")),
+				condition
 				);
 		
 		// --- [Start] Debug

@@ -190,7 +190,12 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 		result.add("'" + this.text + "'");
 		result.add("'" + this.typ + "'");
 		result.add("'" + this.fach + "'");
-		result.add("to_date('" + new java.sql.Date(this.datumVon.getTimeInMillis()).toString() + "', 'yyyy-mm-dd')");
+		// Super hacky hack
+		// In einem Set sind ja keine zwei Daten drin, deswegen ist bei einer Schularbeiten,
+		// einem Test nur ein Datum drin.
+		// Mit dieser "Rollator-Variante" passiert das jetzt garantiert nicht mehr!
+		// TODO: Lösungen zum dem Problem? Ist das überhaupt eine Rollator-Lösung? Wäre ne Liste besser?
+		result.add("to_date('" + this.toVector().get(4) + "', 'dd.mm.yyyy')");
 		result.add("to_date('" + new java.sql.Date(this.datumBis.getTimeInMillis()).toString() + "', 'yyyy-mm-dd')");
 		return result;
 	}

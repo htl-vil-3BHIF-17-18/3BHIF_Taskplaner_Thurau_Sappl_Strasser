@@ -167,16 +167,24 @@ public class MainFrame extends JFrame implements ActionListener {
 	}
 
 	private Set<Task> processUserInput() {
-		GregorianCalendar von = new GregorianCalendar(Integer.valueOf(this.fromDate.getText().split("\\.")[2]),
+		GregorianCalendar von = new GregorianCalendar(
+				Integer.valueOf(this.fromDate.getText().split("\\.")[2]),
 				Integer.valueOf(this.fromDate.getText().split("\\.")[1]),
-				Integer.valueOf(this.fromDate.getText().split("\\.")[0]));
+				Integer.valueOf(this.fromDate.getText().split("\\.")[0])
+		);
 		String typ = (String) this.taskType.getSelectedItem();
-		GregorianCalendar bis = new GregorianCalendar(Integer.valueOf(this.fromDate.getText().split("\\.")[2]),
-				Integer.valueOf(this.fromDate.getText().split("\\.")[1]),
-				Integer.valueOf(this.fromDate.getText().split("\\.")[0]));
-		// TODO: mit den von oben eingelesenen Daten ein SELECT durchführen
-		// mögliche Typen von Task (Combobox): Test, Schularbeit, Hausübung, ALLE
-		return null;
+		GregorianCalendar bis = new GregorianCalendar(
+				Integer.valueOf(this.toDate.getText().split("\\.")[2]),
+				Integer.valueOf(this.toDate.getText().split("\\.")[1]),
+				Integer.valueOf(this.toDate.getText().split("\\.")[0])
+		);
+		// Opel-Corsa-Select-Lösung - Sehr, sehr schlecht (weils nicht geht)
+		// TODO: Opel-Corsa-Lösung funktionell machen
+		return this.dbw.getTasks(
+				"type = '" + typ + "' AND "
+				+ "dateFrom > to_date('"  + new java.sql.Date(von.getTimeInMillis()).toString() +"', 'yyyy-mm-dd') AND "
+				+ "dateTo < to_date('" + new java.sql.Date(bis.getTimeInMillis()).toString() + "', 'yyyy-mm-dd')"
+		);
 	}
 
 	class PopupListener extends MouseAdapter {
