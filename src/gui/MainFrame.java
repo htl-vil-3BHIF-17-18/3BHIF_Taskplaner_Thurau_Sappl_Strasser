@@ -65,7 +65,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.dbh.initialize();
 		this.dbw = new DatabaseWrapper(dbh);
 		// --- [Begin] Debug
-		System.out.println(this.dbw.createTasksTable());
+		//System.out.println(this.dbw.createTasksTable());
 		// --- [End  ] Debug
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setPreferredSize(new Dimension(700, 500));
@@ -135,6 +135,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		edit.addActionListener(this);
 		newItem.addActionListener(this);
 		showTasks.addActionListener(this);
+		load.addActionListener(this);
+		save.addActionListener(this);
 	}
 
 	@Override
