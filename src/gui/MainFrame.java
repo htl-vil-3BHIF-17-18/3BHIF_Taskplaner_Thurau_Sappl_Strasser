@@ -65,8 +65,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.dbh.initialize();
 		this.dbw = new DatabaseWrapper(dbh);
 		// --- [Begin] Debug
-		//System.out.println(this.dbw.createTasksTable());
-		// --- [End  ] Debug
+		// System.out.println(this.dbw.createTasksTable());
+		// --- [End ] Debug
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setPreferredSize(new Dimension(700, 500));
 		this.pack();
@@ -148,7 +148,10 @@ public class MainFrame extends JFrame implements ActionListener {
 				e.printStackTrace();
 			}
 		} else if (arg0.getSource().equals(this.load)) {
-			this.table.setTasks(dbw.getTasks());
+			Set<Task> probe = dbw.getTasks();
+			System.out.println(probe.size());
+			this.table.setTasks(probe);
+			System.out.println(this.table.getTasks().size());
 		} else if (arg0.getSource().equals(this.save)) {
 			this.dbw.setTasks(this.table.getTasks());
 		} else if (arg0.getSource().equals(this.showTasks)) {
@@ -167,24 +170,29 @@ public class MainFrame extends JFrame implements ActionListener {
 	}
 
 	private Set<Task> processUserInput() {
-		GregorianCalendar von = new GregorianCalendar(
-				Integer.valueOf(this.fromDate.getText().split("\\.")[2]),
+		GregorianCalendar von = new GregorianCalendar(Integer.valueOf(this.fromDate.getText().split("\\.")[2]),
 				Integer.valueOf(this.fromDate.getText().split("\\.")[1]),
-				Integer.valueOf(this.fromDate.getText().split("\\.")[0])
-		);
+				Integer.valueOf(this.fromDate.getText().split("\\.")[0]));
 		String typ = (String) this.taskType.getSelectedItem();
-		GregorianCalendar bis = new GregorianCalendar(
-				Integer.valueOf(this.toDate.getText().split("\\.")[2]),
+		GregorianCalendar bis = new GregorianCalendar(Integer.valueOf(this.toDate.getText().split("\\.")[2]),
 				Integer.valueOf(this.toDate.getText().split("\\.")[1]),
-				Integer.valueOf(this.toDate.getText().split("\\.")[0])
-		);
-		// Opel-Corsa-Select-Lösung - Sehr, sehr schlecht (weils nicht geht)
-		// TODO: Opel-Corsa-Lösung funktionell machen
-		return this.dbw.getTasks(
-				"type = '" + typ + "' AND "
-				+ "dateFrom > to_date('"  + new java.sql.Date(von.getTimeInMillis()).toString() +"', 'yyyy-mm-dd') AND "
-				+ "dateTo < to_date('" + new java.sql.Date(bis.getTimeInMillis()).toString() + "', 'yyyy-mm-dd')"
-		);
+				Integer.valueOf(this.toDate.getText().split("\\.")[0]));
+		//Monat wird nullbasiert abgespeichert, deswegen die Eingabe um 1 vermindern
+		von.set(GregorianCalendar.MONTH, von.get(GregorianCalendar.MONTH) - 1);
+		bis.set(GregorianCalendar.MONTH, von.get(GregorianCalendar.MONTH) - 1);
+		// das da funktioniert:
+		if (typ != "alle")
+			return this.dbw.getTasks("type = '" + typ + "' AND " + "dateFrom > to_date('"
+					+ new java.sql.Date(von.getTimeInMillis()).toString() + "', 'yyyy-mm-dd') AND "
+					+ "dateFrom < to_date('" + new java.sql.Date(bis.getTimeInMillis()).toString()
+					+ "', 'yyyy-mm-dd')");
+		else
+			//das nicht
+			//TODO: alle Tasks zwischen 2 Zeitpunkten unabhängig vom Typ aus der DB herauskitzeln
+			return this.dbw.getTasks(
+					"type = '%' AND " + "dateFrom > to_date('" + new java.sql.Date(von.getTimeInMillis()).toString()
+							+ "', 'yyyy-mm-dd') AND " + "dateFrom < to_date('"
+							+ new java.sql.Date(bis.getTimeInMillis()).toString() + "', 'yyyy-mm-dd')");
 	}
 
 	class PopupListener extends MouseAdapter {
