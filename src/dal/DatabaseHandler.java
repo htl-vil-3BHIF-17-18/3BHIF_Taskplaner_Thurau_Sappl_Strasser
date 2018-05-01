@@ -162,8 +162,6 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 		
 		statementString = String.format("SELECT %s FROM %s WHERE %s", statementString, table, condition);
 		
-		System.out.println(statementString);
-		
         this.openConnection();
         
 		try {
@@ -298,8 +296,6 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 				statementString = String.format("%s %s", statementString, s);
 			}
 		}
-		
-		System.out.println(statementString);
 		
 		statementString = String.format("INSERT INTO %s VALUES(%s)", table, statementString);
 		

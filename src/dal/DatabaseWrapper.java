@@ -48,7 +48,6 @@ public class DatabaseWrapper {
 		
 		//if(result) {
 			for(Task t : tasks) {
-				System.out.println(t.toVector());
 				result = this.databaseHandler.performSimpleInsert("Tasks", t.databaseValues());
 			}
 		//}
