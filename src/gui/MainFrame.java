@@ -21,9 +21,11 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.MaskFormatter;
 
 import bll.Task;
@@ -33,6 +35,7 @@ import dal.DatabaseWrapper;
 public class MainFrame extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = -8026416994513756565L;
+	private MainFrame mainframe = this;
 	private JMenuBar menuBar;
 	private JMenu start;
 	private JMenuItem load;
@@ -148,12 +151,31 @@ public class MainFrame extends JFrame implements ActionListener {
 				e.printStackTrace();
 			}
 		} else if (arg0.getSource().equals(this.load)) {
-			Set<Task> probe = dbw.getTasks();
-			System.out.println(probe.size());
-			this.table.setTasks(probe);
-			System.out.println(this.table.getTasks().size());
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+			    public void run() {
+					table.setTasks(dbw.getTasks());
+					JOptionPane.showMessageDialog(
+							mainframe,
+							"Laden von DB erfolgreich.",
+							"Information",
+							JOptionPane.INFORMATION_MESSAGE
+					);
+				}
+			});
 		} else if (arg0.getSource().equals(this.save)) {
-			this.dbw.setTasks(this.table.getTasks());
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+			    public void run() {
+					dbw.setTasks(table.getTasks());
+					JOptionPane.showMessageDialog(
+							mainframe,
+							"Speichern in DB erfolgreich.",
+							"Information",
+							JOptionPane.INFORMATION_MESSAGE
+					);
+				}
+			});
 		} else if (arg0.getSource().equals(this.showTasks)) {
 			this.table.setTasks(this.processUserInput());
 		} else if (arg0.getSource().equals(newItem)) {
@@ -190,7 +212,9 @@ public class MainFrame extends JFrame implements ActionListener {
 			//das nicht
 			//TODO: alle Tasks zwischen 2 Zeitpunkten unabhängig vom Typ aus der DB herauskitzeln
 			return this.dbw.getTasks(
-					"type = '%' AND " + "dateFrom > to_date('" + new java.sql.Date(von.getTimeInMillis()).toString()
+					// joestr an  @thuraua: type = ... weglossn?
+					//"type = '%' AND " + 
+							"dateFrom > to_date('" + new java.sql.Date(von.getTimeInMillis()).toString()
 							+ "', 'yyyy-mm-dd') AND " + "dateFrom < to_date('"
 							+ new java.sql.Date(bis.getTimeInMillis()).toString() + "', 'yyyy-mm-dd')");
 	}

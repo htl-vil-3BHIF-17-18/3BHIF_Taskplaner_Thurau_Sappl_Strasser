@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -61,17 +60,13 @@ public class DatabaseWrapper {
 	 */
 	public Set<Task> getTasks() {
 		
-		Set<Task> result = new HashSet<Task>();
+		Set<Task> result = new LinkedHashSet<Task>();
 		
 		ResultSet rs = this.databaseHandler.performSelect(
 				"Tasks",
 				new LinkedHashSet<String>(Arrays.asList("done", "text", "type", "subject", "dateFrom", "dateTo")),
 				"1 = 1"
 				);
-		
-		// --- [Start] Debug
-		System.out.println(rs);
-		// --- [End  ] Debug
 		
 		try {
 			while(rs.next()) {
@@ -108,17 +103,13 @@ public class DatabaseWrapper {
 	 */
 	public Set<Task> getTasks(String condition) {
 		
-		Set<Task> result = new HashSet<Task>();
+		Set<Task> result = new LinkedHashSet<Task>();
 		
 		ResultSet rs = this.databaseHandler.performSelect(
 				"Tasks",
 				new LinkedHashSet<String>(Arrays.asList("done", "text", "type", "subject", "dateFrom", "dateTo")),
 				condition
 				);
-		
-		// --- [Start] Debug
-		System.out.println(rs);
-		// --- [End  ] Debug
 		
 		try {
 			while(rs.next()) {

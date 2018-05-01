@@ -1,5 +1,6 @@
 package bll;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -191,8 +192,9 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 		// Lösung zum Problem? : Ja; Ist das eine Rollator-Lösung: ich tät sagen das ist eine "Fieberblase";
 		// Liste besser? : Listen sind wie Alkohol, sie machen das Leben nicht besser, aber erträglicher!
 		//				   Tua do nix mehr uma man
-		result.add("to_date('" + this.toVector().get(4) + "', 'dd.mm.yyyy')");
-		result.add("to_date('" + new java.sql.Date(this.datumBis.getTimeInMillis()).toString() + "', 'yyyy-mm-dd')");
+		result.add("to_date('" + this.toVector().get(1) + "', 'dd.mm.yyyy')");
+		LocalDate d = new java.sql.Date(this.datumBis.getTimeInMillis()).toLocalDate();
+		result.add("to_date('" + d.getYear() + "-" + (d.getMonthValue() - 1) + "-" + d.getDayOfMonth() + "', 'yyyy-mm-dd')");
 		return result;
 	}
 

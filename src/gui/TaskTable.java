@@ -1,8 +1,8 @@
 package gui;
 
 import java.util.GregorianCalendar;
+import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -48,7 +48,7 @@ public class TaskTable extends JTable {
 	}
 
 	public Set<Task> getTasks() {
-		Set<Task> rgw = new TreeSet<Task>();
+		Set<Task> rgw = new LinkedHashSet<Task>();
 		for (int row = 0; row < this.model.getRowCount(); row++) {
 			boolean status = this.model.getValueAt(row, 0) == "erledigt" ? true : false;
 			GregorianCalendar datumVon = new GregorianCalendar(
