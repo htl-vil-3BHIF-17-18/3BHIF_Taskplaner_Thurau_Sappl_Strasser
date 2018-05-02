@@ -225,21 +225,13 @@ public class MainFrame extends JFrame implements ActionListener {
 		GregorianCalendar bis = new GregorianCalendar(Integer.valueOf(this.toDate.getText().split("\\.")[2]),
 				Integer.valueOf(this.toDate.getText().split("\\.")[1]),
 				Integer.valueOf(this.toDate.getText().split("\\.")[0]));
-		//Monat wird nullbasiert abgespeichert, deswegen die Eingabe um 1 vermindern
-		von.set(GregorianCalendar.MONTH, von.get(GregorianCalendar.MONTH) - 1);
-		bis.set(GregorianCalendar.MONTH, von.get(GregorianCalendar.MONTH) - 1);
-		// das da funktioniert:
-		if (typ != "alle")
+		if (typ != "Alle")
 			return this.dbw.getTasks("type = '" + typ + "' AND " + "dateFrom > to_date('"
 					+ new java.sql.Date(von.getTimeInMillis()).toString() + "', 'yyyy-mm-dd') AND "
 					+ "dateFrom < to_date('" + new java.sql.Date(bis.getTimeInMillis()).toString()
 					+ "', 'yyyy-mm-dd')");
 		else
-			//das nicht
-			//TODO: alle Tasks zwischen 2 Zeitpunkten unabhängig vom Typ aus der DB herauskitzeln
 			return this.dbw.getTasks(
-					// joestr an  @thuraua: type = ... weglossn?
-					//"type = '%' AND " + 
 							"dateFrom > to_date('" + new java.sql.Date(von.getTimeInMillis()).toString()
 							+ "', 'yyyy-mm-dd') AND " + "dateFrom < to_date('"
 							+ new java.sql.Date(bis.getTimeInMillis()).toString() + "', 'yyyy-mm-dd')");
