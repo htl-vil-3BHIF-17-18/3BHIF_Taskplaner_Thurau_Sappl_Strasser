@@ -7,14 +7,23 @@ import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.sun.rowset.CachedRowSetImpl;
-
 import bll.Task;
 
+/**
+ * DatabaseWrapper-Klasse
+ * <br />
+ * Baut auf den {@linkplain DatabaseHandler} auf.
+ * @author Joel Strasser
+ */
 public class DatabaseWrapper {
 
 	DatabaseHandler databaseHandler = null;
 	
+	/**
+	 * DatabaseWrapper-Konstruktur
+	 * @author Joel Strasser
+	 * @param databaseHandler {@linkplain DatabaseHandler} DatabaseHandler
+	 */
 	public DatabaseWrapper(DatabaseHandler databaseHandler) {
 		this.databaseHandler = databaseHandler;
 	}

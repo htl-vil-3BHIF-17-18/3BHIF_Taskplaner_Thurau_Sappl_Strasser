@@ -16,6 +16,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * DatabaseHandler-Klasse
+ * <br />
+ * Erbt von der {@linkplain AbstractDatabaseHandler} Klasse.
  * @author Joel Strasser
  * @version 2
  * @since 1
@@ -47,7 +49,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 */
 	@Override
 	public boolean initialize() {
-		// Wenn bereits initialisiert wurde, 'true' zurÃ¼ckgeben.
+		// Wenn bereits initialisiert wurde, 'true' zurückgeben.
 		if (this.initialized) {
 			return true;
 		}
@@ -223,7 +225,9 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 * @param columns {@linkplain Set} Spalten
 	 * @param condition {@linkplain String} Bedingung
 	 * @return {@linkplain List} Ergebnis
-	 * @deprecated Nicht implementiert. Benutzung von {@linkplain DatabaseHandler#performSelect(String, Set, String)} empfohlen.
+	 * @deprecated Nicht implementiert.
+	 * <br />
+	 * Benutzung von {@linkplain DatabaseHandler#performSelect(String, Set, String)} empfohlen.
 	 */
 	@Override
 	public <T> List<T> performExtendedSelect(String table, Set<String> columns, String condition) {
