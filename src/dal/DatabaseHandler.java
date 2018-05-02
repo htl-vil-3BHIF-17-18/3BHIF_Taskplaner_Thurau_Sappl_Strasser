@@ -386,8 +386,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
 		return result;
 	}
-
-	/*
+	
 	/**
 	 * DELETE exekutieren.
 	 * @author Joel Strasser
