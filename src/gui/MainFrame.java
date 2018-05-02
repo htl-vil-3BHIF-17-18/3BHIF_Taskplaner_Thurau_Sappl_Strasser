@@ -105,14 +105,14 @@ public class MainFrame extends JFrame implements ActionListener {
 
 		// Testdaten für GUI:
 		Set<Task> set = new TreeSet<Task>();
-		set.add(new Task(false, new GregorianCalendar(2018, 4, 20), "POS", "Hausübung",
+		/*set.add(new Task(false, new GregorianCalendar(2018, 4, 20), "POS", "Hausübung",
 				new GregorianCalendar(2018, 5, 5), "Taskplaner implementieren"));
 		set.add(new Task(false, new GregorianCalendar(2018, 4, 25), "TINF", "Hausübung",
 				new GregorianCalendar(2018, 4, 26), "Übung 13785"));
 		set.add(new Task(true, new GregorianCalendar(2018, 4, 26), "Deutsch", "Schularbeit",
 				new GregorianCalendar(2018, 4, 26), "Textbezogene Erörterung"));
 		set.add(new Task(false, new GregorianCalendar(2018, 5, 26), "SYP", "Test", new GregorianCalendar(2018, 5, 26),
-				"nix"));
+				"nix"));*/
 
 		this.table = new TaskTable(set);
 		this.scrollPane = new JScrollPane(table);
@@ -145,6 +145,10 @@ public class MainFrame extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (arg0.getSource().equals(edit)) {
+			if(this.table.getSelectedRow() < 0 || this.table.getSelectedRow() > this.table.getModel().getRowCount()) {
+				return;
+			}
+			
 			try {
 				new EditDialog(this.table, (Task) this.table.getTasks().toArray()[this.table.getSelectedRow()], false);
 			} catch (ParseException e) {
@@ -154,26 +158,45 @@ public class MainFrame extends JFrame implements ActionListener {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 			    public void run() {
+					
+					try {
 					table.setTasks(dbw.getTasks());
-					JOptionPane.showMessageDialog(
-							mainframe,
-							"Laden von DB erfolgreich.",
-							"Information",
-							JOptionPane.INFORMATION_MESSAGE
-					);
+						JOptionPane.showMessageDialog(
+								mainframe,
+								"Laden von DB erfolgreich.",
+								"Information",
+								JOptionPane.INFORMATION_MESSAGE
+						);
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(
+								mainframe,
+								"Laden von DB NICHT erfolgreich.",
+								"Information",
+								JOptionPane.ERROR_MESSAGE
+						);
+					}
 				}
 			});
 		} else if (arg0.getSource().equals(this.save)) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 			    public void run() {
-					dbw.setTasks(table.getTasks());
-					JOptionPane.showMessageDialog(
-							mainframe,
-							"Speichern in DB erfolgreich.",
-							"Information",
-							JOptionPane.INFORMATION_MESSAGE
-					);
+					try {
+						table.setTasks(dbw.getTasks());
+						JOptionPane.showMessageDialog(
+								mainframe,
+								"Speichern in DB erfolgreich.",
+								"Information",
+								JOptionPane.INFORMATION_MESSAGE
+						);
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(
+								mainframe,
+								"Speichern in DB NICHT erfolgreich.",
+								"Information",
+								JOptionPane.ERROR_MESSAGE
+						);
+					}
 				}
 			});
 		} else if (arg0.getSource().equals(this.showTasks)) {
@@ -186,6 +209,9 @@ public class MainFrame extends JFrame implements ActionListener {
 				e.printStackTrace();
 			}
 		} else if (arg0.getSource().equals(delete)) {
+			if(this.table.getSelectedRow() < 0 || this.table.getSelectedRow() > this.table.getModel().getRowCount()) {
+				return;
+			}
 			this.table.removeSelectedTask();
 		}
 

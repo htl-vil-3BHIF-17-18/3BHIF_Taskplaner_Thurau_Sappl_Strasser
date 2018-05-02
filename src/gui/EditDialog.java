@@ -59,21 +59,32 @@ public class EditDialog extends JDialog implements ActionListener {
 	}
 
 	private void fillControls() {
+		int monthFrom = 0;
+		int monthTo = 0;
+		
+		if(addMode) {
+			monthFrom = task.getDatumVon().get(GregorianCalendar.MONTH) + 1;
+			monthTo = task.getDatumBis().get(GregorianCalendar.MONTH) + 1;
+		} else {
+			monthFrom = task.getDatumVon().get(GregorianCalendar.MONTH);
+			monthTo = task.getDatumBis().get(GregorianCalendar.MONTH);
+		}
+		
 		if (task.isErledigt())
 			this.rbFertig.setSelected(true);
 		else
 			this.rbUnFertig.setSelected(true);
 		this.tfVon.setText(String.valueOf(task.getDatumVon().get(GregorianCalendar.DAY_OF_MONTH) < 10 ? "0" : "")
 				+ task.getDatumVon().get(GregorianCalendar.DAY_OF_MONTH) + "."
-				+ (task.getDatumVon().get(GregorianCalendar.MONTH) < 10 ? "0" : "")
-				+ String.valueOf(task.getDatumVon().get(GregorianCalendar.MONTH)) + "."
+				+ (monthFrom < 10 ? "0" : "")
+				+ String.valueOf(monthFrom) + "."
 				+ String.valueOf(task.getDatumVon().get(GregorianCalendar.YEAR)));
 		this.tfFach.setText(task.getFach());
 		this.cbTyp.setSelectedItem(task.getTyp());
 		this.tfBis.setText(String.valueOf(task.getDatumBis().get(GregorianCalendar.DAY_OF_MONTH) < 10 ? "0" : "")
 				+ task.getDatumBis().get(GregorianCalendar.DAY_OF_MONTH) + "."
-				+ (task.getDatumBis().get(GregorianCalendar.MONTH) < 10 ? "0" : "")
-				+ String.valueOf(task.getDatumBis().get(GregorianCalendar.MONTH)) + "."
+				+ (monthTo < 10 ? "0" : "")
+				+ String.valueOf(monthTo) + "."
 				+ String.valueOf(task.getDatumBis().get(GregorianCalendar.YEAR)));
 		this.tfText.setText(task.getText());
 	}
