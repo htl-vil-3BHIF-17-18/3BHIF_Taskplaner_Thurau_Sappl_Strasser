@@ -16,7 +16,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * DatabaseHandler-Klasse
- * 
  * @author Joel Strasser
  * @version 2
  * @since 1
@@ -29,12 +28,10 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
 	/**
 	 * DatabaseHandler-Konstruktor
-	 * 
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 1
-	 * @param connectionString
-	 *            {@link String} Zeichenkette fÃ¼r die Verbindung.
+	 * @param connectionString {@linkplain String} Zeichenkette für die Verbindung
 	 */
 	public DatabaseHandler(String connectionString) {
 		super(connectionString);
@@ -43,10 +40,10 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
 	/**
 	 * DatabaseHandler initialisieren.
-	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
+	 * @return {@linkplain Boolean} Erfolgreich
 	 */
 	@Override
 	public boolean initialize() {
@@ -66,11 +63,11 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	}
 
 	/**
-	 * Verbindung Ã¶ffnen.
-	 * 
+	 * Verbindung öffnen.
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 2
+	 * @return {@linkplain Boolean} Erfolgreich
 	 */
 	@Override
 	protected boolean openConnection() {
@@ -88,11 +85,11 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	}
 
 	/**
-	 * Verbindung schlieÃŸen.
-	 * 
+	 * Verbindung schließen.
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 2
+	 * @retunr {@linkplain Boolean} Erfolgreich
 	 */
 	@Override
 	protected boolean closeConnection() {
@@ -115,9 +112,8 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 2
-	 * @param statement
-	 *            {@link String} Statement
-	 * @return {@link Boolean} Erfolgreich
+	 * @param statement {@linkplain String} Statement
+	 * @return {@linkplain Boolean} Erfolgreich
 	 */
 	@Override
 	public boolean perform(String statement) {
@@ -142,17 +138,13 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
 	/**
 	 * SELECT exekutieren.
-	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param table
-	 *            {@link String} Datenbanktabelle
-	 * @param columns
-	 *            {@link Set} Spalten
-	 * @param condition
-	 *            {@link String} Bedingung
-	 * @return {@link ResultSet} Ergebnis
+	 * @param table {@linkplain String} Datenbanktabelle
+	 * @param columns {@linkplain Set} Spalten
+	 * @param condition {@linkplain String} Bedingung
+	 * @return {@linkplain ResultSet}, {@linkplain CachedRowSetImpl} Ergebnis
 	 */
 	@Override
 	public ResultSet performSelect(String table, Set<String> columns, String condition) {
@@ -207,15 +199,12 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
 	/**
 	 * Einfaches SELECT exekutieren.
-	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param table
-	 *            {@link String} Datenbanktabelle
-	 * @param condition
-	 *            {@link String} Bedingung
-	 * @return {@link ResultSet} Ergebnis
+	 * @param table {@linkplain String} Datenbanktabelle
+	 * @param condition {@linkplain String} Bedingung
+	 * @return {@linkplain ResultSet}, {@linkplain CachedRowSetImpl} Ergebnis
 	 */
 	@Override
 	public ResultSet performSimpleSelect(String table, String condition) {
@@ -227,19 +216,14 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
 	/**
 	 * Erweitertes SELECT exekutieren.
-	 * 
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 1
-	 * @param table
-	 *            {@link String} Datenbanktabelle
-	 * @param columns
-	 *            {@link Set} Spalten
-	 * @param condition
-	 *            {@link String} Bedingung
-	 * @return {@link List} Ergebnis
-	 * @deprecated Nicht implementiert.
-	 * @see performSelect
+	 * @param table {@linkplain String} Datenbanktabelle
+	 * @param columns {@linkplain Set} Spalten
+	 * @param condition {@linkplain String} Bedingung
+	 * @return {@linkplain List} Ergebnis
+	 * @deprecated Nicht implementiert. Benutzung von {@linkplain DatabaseHandler#performSelect(String, Set, String)} empfohlen.
 	 */
 	@Override
 	public <T> List<T> performExtendedSelect(String table, Set<String> columns, String condition) {
@@ -251,17 +235,13 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
 	/**
 	 * INSERT exekutieren.
-	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param table
-	 *            {@link String} Datenbanktabelle
-	 * @param columns
-	 *            {@link Set} Spalten
-	 * @param values
-	 *            {@link Set} Werte
-	 * @return {@link Boolean} Erfolgreich
+	 * @param table {@linkplain String} Datenbanktabelle
+	 * @param columns {@linkplain Set} Spalten
+	 * @param values {@linkplain Set} Werte
+	 * @return {@linkplain Boolean} Erfolgreich
 	 */
 	@Override
 	public boolean performInsert(String table, Set<String> columns, Set<String> values) {
@@ -309,15 +289,12 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
 	/**
 	 * Einfaches INSERT exekutieren.
-	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param table
-	 *            {@link String} Datenbanktabelle
-	 * @param values
-	 *            {@link Set} Werte
-	 * @return {@link Boolean} Erfolgreich
+	 * @param table {@linkplain String} Datenbanktabelle
+	 * @param values {@linkplain Set} Werte
+	 * @return {@linkplain Boolean} Erfolgreich
 	 */
 	@Override
 	public boolean performSimpleInsert(String table, Set<String> values) {
@@ -358,19 +335,14 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
 	/**
 	 * UPDATE exekutieren.
-	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param table
-	 *            {@link String} Datenbanktabelle
-	 * @param columns
-	 *            {@link Set} Spalten
-	 * @param values
-	 *            {@link Set} Werte
-	 * @param condition
-	 *            {@link String} Bedingung
-	 * @return {@link Boolean} Erfolgreich
+	 * @param table {@linkplain String} Datenbanktabelle
+	 * @param columns {@linkplain Set} Spalten
+	 * @param values {@linkplain Set} Werte
+	 * @param condition {@linkplain String} Bedingung
+	 * @return {@linkplain Boolean} Erfolgreich
 	 */
 	@Override
 	public boolean performUpdate(String table, Set<String> columns, Set<String> values, String condition) {
@@ -415,17 +387,15 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 		return result;
 	}
 
+	/*
 	/**
 	 * DELETE exekutieren.
-	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param table
-	 *            {@link String} Datenbanktabelle
-	 * @param condition
-	 *            {@link String} Bedingung
-	 * @return {@link Boolean} Erfolgreich
+	 * @param table {@linkplain String} Datenbanktabelle
+	 * @param condition {@linkplain String} Bedingung
+	 * @return {@linkplain Boolean} Erfolgreich
 	 */
 	@Override
 	public boolean performDelete(String table, String condition) {

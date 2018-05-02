@@ -178,7 +178,7 @@ public class MainFrame extends JFrame implements ActionListener {
 				@Override
 				public void run() {
 					try {
-						table.setTasks(dbw.getTasks());
+						dbw.setTasks(table.getTasks());
 						JOptionPane.showMessageDialog(mainframe, "Speichern in DB erfolgreich.", "Information",
 								JOptionPane.INFORMATION_MESSAGE);
 					} catch (Exception e) {
@@ -214,14 +214,23 @@ public class MainFrame extends JFrame implements ActionListener {
 				Integer.valueOf(this.toDate.getText().split("\\.")[1]),
 				Integer.valueOf(this.toDate.getText().split("\\.")[0]));
 		if (typ != "Alle")
-			return this.dbw.getTasks("type = '" + typ + "' AND " + "dateFrom > to_date('"
-					+ new java.sql.Date(von.getTimeInMillis()).toString() + "', 'yyyy-mm-dd') AND "
-					+ "dateFrom < to_date('" + new java.sql.Date(bis.getTimeInMillis()).toString()
+			return this.dbw.getTasks(
+					"type = '" + typ + "' AND "
+					+ "dateFrom > to_date('"
+						+ new java.sql.Date(von.getTimeInMillis()).toString()
+					+ "', 'yyyy-mm-dd') AND "
+					+ "dateFrom < to_date('"
+						+ new java.sql.Date(bis.getTimeInMillis()).toString()
 					+ "', 'yyyy-mm-dd')");
 		else
-			return this.dbw.getTasks("dateFrom > to_date('" + new java.sql.Date(von.getTimeInMillis()).toString()
-					+ "', 'yyyy-mm-dd') AND " + "dateFrom < to_date('"
-					+ new java.sql.Date(bis.getTimeInMillis()).toString() + "', 'yyyy-mm-dd')");
+			return this.dbw.getTasks(
+					"dateFrom > to_date('"
+							+ new java.sql.Date(von.getTimeInMillis()).toString()
+					+ "', 'yyyy-mm-dd') AND "
+					+ "dateFrom < to_date('"
+						+ new java.sql.Date(bis.getTimeInMillis()).toString()
+					+ "', 'yyyy-mm-dd')"
+			);
 	}
 
 	class PopupListener extends MouseAdapter {

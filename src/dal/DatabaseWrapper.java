@@ -7,6 +7,8 @@ import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.sun.rowset.CachedRowSetImpl;
+
 import bll.Task;
 
 public class DatabaseWrapper {
@@ -18,8 +20,9 @@ public class DatabaseWrapper {
 	}
 	
 	/**
-	 * Tabelle {@code Tasks} erstellen.
-	 * @return {@link Boolean} Erfolgreich
+	 * Datenbanktabelle für Klasse {@linkplain Task} erstellen.
+	 * @author Joel Strasser
+	 * @return {@linkplain Boolean} Erfolgreich
 	 */
 	public boolean createTasksTable() {
 		return this.databaseHandler.perform(
@@ -34,9 +37,10 @@ public class DatabaseWrapper {
 	}
 	
 	/**
-	 * Setzte {@code Tasks}.
-	 * @param tasks {@link Set} Tasks
-	 * @return {@link Boolean} Erfolgreich
+	 * Ein {@linkplain Set} mit {@linkplain Task}s in die Datenebanktabelle speichern.
+	 * @author Joel Strasser
+	 * @param tasks {@linkplain Set} Set mit Tasks
+	 * @return {@linkplain Boolean} Erfolgreich
 	 */
 	public boolean setTasks(Set<Task> tasks) {
 		
@@ -55,8 +59,9 @@ public class DatabaseWrapper {
 	}
 	
 	/**
-	 * Bekomme {@code Tasks}.
-	 * @return {@link Set} Tasks
+	 * Ein {@linkplain Set} mit {@linkplain Task}s von der Datenebank bekommen.
+	 * @author Joel Strasser
+	 * @return tasks {@linkplain Set} Set mit Tasks
 	 */
 	public Set<Task> getTasks() {
 		
@@ -98,8 +103,11 @@ public class DatabaseWrapper {
 	}
 	
 	/**
-	 * Bekomme {@code Tasks} mit Bendigung.
-	 * @return {@link Set} Tasks
+	 * Ein {@linkplain Set} mit {@linkplain Task}s von der Datenebank bekommen,
+	 * welche eine bestimmte Bedingung erfüllen.
+	 * @author Joel Strasser
+	 * @param condition {@linkplain String} Bedingung
+	 * @return tasks {@linkplain Set} Set mit Tasks
 	 */
 	public Set<Task> getTasks(String condition) {
 		
