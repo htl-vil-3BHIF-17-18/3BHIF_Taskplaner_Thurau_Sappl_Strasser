@@ -16,30 +16,34 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * DatabaseHandler-Klasse
+ * 
  * @author Joel Strasser
  * @version 2
  * @since 1
  */
 public class DatabaseHandler extends AbstractDatabaseHandler {
-	
+
 	private String connectionString = "";
 	private boolean initialized = false;
 	private Connection connection = null;
-	
+
 	/**
 	 * DatabaseHandler-Konstruktor
+	 * 
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 1
-	 * @param connectionString {@link String} Zeichenkette für die Verbindung.
+	 * @param connectionString
+	 *            {@link String} Zeichenkette für die Verbindung.
 	 */
 	public DatabaseHandler(String connectionString) {
 		super(connectionString);
 		this.connectionString = connectionString;
 	}
-	
+
 	/**
 	 * DatabaseHandler initialisieren.
+	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
@@ -47,96 +51,114 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 	@Override
 	public boolean initialize() {
 		// Wenn bereits initialisiert wurde, 'true' zurückgeben.
-		if(this.initialized) { return true; }
-		
+		if (this.initialized) {
+			return true;
+		}
+
 		try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-            this.initialized = true;
-            return true;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        }
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			this.initialized = true;
+			return true;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
+
 	/**
 	 * Verbindung öffnen.
+	 * 
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 2
 	 */
 	@Override
 	protected boolean openConnection() {
-		if(!this.initialized) { return false; }
-		
+		if (!this.initialized) {
+			return false;
+		}
+
 		try {
-            this.connection = DriverManager.getConnection(this.connectionString);
-            return true;
-        } catch (SQLException e) {
-        	e.printStackTrace();
-        	return false;
-        }
+			this.connection = DriverManager.getConnection(this.connectionString);
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
+
 	/**
 	 * Verbindung schließen.
+	 * 
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 2
 	 */
 	@Override
 	protected boolean closeConnection() {
-		if(!this.initialized) { return false; }
-		
+		if (!this.initialized) {
+			return false;
+		}
+
 		try {
-            this.connection.close();
-            return true;
-        } catch (SQLException e) {
-        	e.printStackTrace();
-        	return false;
-        }
+			this.connection.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
+
 	/**
 	 * Exekutieren.
+	 * 
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 2
-	 * @param statement {@link String} Statement
+	 * @param statement
+	 *            {@link String} Statement
 	 * @return {@link Boolean} Erfolgreich
 	 */
 	@Override
 	public boolean perform(String statement) {
-		if(!this.initialized) { return false; }
-		
+		if (!this.initialized) {
+			return false;
+		}
+
 		boolean result = false;
-		
+
 		this.openConnection();
-		
+
 		try {
-            result = this.connection.prepareStatement(statement).execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            this.closeConnection();
-        }
-		
+			result = this.connection.prepareStatement(statement).execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			this.closeConnection();
+		}
+
 		return result;
 	}
-	
+
 	/**
 	 * SELECT exekutieren.
+	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param table {@link String} Datenbanktabelle
-	 * @param columns {@link Set} Spalten
-	 * @param condition {@link String} Bedingung
+	 * @param table
+	 *            {@link String} Datenbanktabelle
+	 * @param columns
+	 *            {@link Set} Spalten
+	 * @param condition
+	 *            {@link String} Bedingung
 	 * @return {@link ResultSet} Ergebnis
 	 */
 	@Override
 	public ResultSet performSelect(String table, Set<String> columns, String condition) {
-		if(!this.initialized) { return null; }
+		if (!this.initialized) {
+			return null;
+		}
 
 		CachedRowSetImpl crs = null;
 		try {
@@ -145,106 +167,123 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-        
-        Iterator<String> it = columns.iterator();
-		
+
+		Iterator<String> it = columns.iterator();
+
 		String statementString = "";
-		
-		while(it.hasNext()) {
+
+		while (it.hasNext()) {
 			String s = it.next();
-			
-			if(it.hasNext()) {
+
+			if (it.hasNext()) {
 				statementString = String.format("%s %s,", statementString, s);
 			} else {
 				statementString = String.format("%s %s", statementString, s);
 			}
 		}
-		
+
 		statementString = String.format("SELECT %s FROM %s WHERE %s", statementString, table, condition);
-		
-        this.openConnection();
-        
+
+		this.openConnection();
+
 		try {
 			crs.populate(this.connection.createStatement().executeQuery(statementString));
 		} catch (SQLException e) {
 			e.printStackTrace();
-			
+
 			try {
 				crs.close();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			
+
 			return null;
 		} finally {
 			this.closeConnection();
 		}
-		
-        return crs;
+
+		return crs;
 	}
-	
+
 	/**
 	 * Einfaches SELECT exekutieren.
+	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param table {@link String} Datenbanktabelle
-	 * @param condition {@link String} Bedingung
+	 * @param table
+	 *            {@link String} Datenbanktabelle
+	 * @param condition
+	 *            {@link String} Bedingung
 	 * @return {@link ResultSet} Ergebnis
 	 */
 	@Override
 	public ResultSet performSimpleSelect(String table, String condition) {
-		if(!this.initialized) { return null; }
+		if (!this.initialized) {
+			return null;
+		}
 		return performSelect(table, new HashSet<String>(Arrays.asList("*")), condition);
 	}
 
 	/**
 	 * Erweitertes SELECT exekutieren.
+	 * 
 	 * @author Joel Strasser
 	 * @version 1
 	 * @since 1
-	 * @param table {@link String} Datenbanktabelle
-	 * @param columns {@link Set} Spalten
-	 * @param condition {@link String} Bedingung
+	 * @param table
+	 *            {@link String} Datenbanktabelle
+	 * @param columns
+	 *            {@link Set} Spalten
+	 * @param condition
+	 *            {@link String} Bedingung
 	 * @return {@link List} Ergebnis
 	 * @deprecated Nicht implementiert.
 	 * @see performSelect
 	 */
 	@Override
 	public <T> List<T> performExtendedSelect(String table, Set<String> columns, String condition) {
-		if(!this.initialized) { return null; }
+		if (!this.initialized) {
+			return null;
+		}
 		throw new NotImplementedException();
 	}
 
 	/**
 	 * INSERT exekutieren.
+	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param table {@link String} Datenbanktabelle
-	 * @param columns {@link Set} Spalten
-	 * @param values {@link Set} Werte
+	 * @param table
+	 *            {@link String} Datenbanktabelle
+	 * @param columns
+	 *            {@link Set} Spalten
+	 * @param values
+	 *            {@link Set} Werte
 	 * @return {@link Boolean} Erfolgreich
 	 */
 	@Override
 	public boolean performInsert(String table, Set<String> columns, Set<String> values) {
-		if(!this.initialized) { return false; }
-		
+		if (!this.initialized) {
+			return false;
+		}
+
 		boolean result = false;
-		
+
 		Iterator<String> it = columns.iterator();
 		Iterator<String> it2 = values.iterator();
-		
+
 		String statementColumns = "";
 		String statementValues = "";
-		
+
 		String statementString = "";
-		
-		while(it.hasNext() && it2.hasNext()) {
+
+		while (it.hasNext() && it2.hasNext()) {
 			String s = it.next();
 			String s2 = it2.next();
-			
-			if(it.hasNext() && it2.hasNext()) {
+
+			if (it.hasNext() && it2.hasNext()) {
 				statementColumns = String.format("%s %s,", statementColumns, s);
 				statementValues = String.format("%s %s,", statementValues, s2);
 			} else {
@@ -252,143 +291,161 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 				statementValues = String.format("%s %s", statementValues, s2);
 			}
 		}
-		
+
 		statementString = String.format("INSERT INTO %s(%s) VALUES(%s)", table, statementColumns, statementValues);
-		
+
 		this.openConnection();
-		
+
 		try {
-            result = this.connection.prepareStatement(statementString).execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-        	this.closeConnection();
-        }
-		
+			result = this.connection.prepareStatement(statementString).execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			this.closeConnection();
+		}
+
 		return result;
 	}
 
 	/**
 	 * Einfaches INSERT exekutieren.
+	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param table {@link String} Datenbanktabelle
-	 * @param values {@link Set} Werte
+	 * @param table
+	 *            {@link String} Datenbanktabelle
+	 * @param values
+	 *            {@link Set} Werte
 	 * @return {@link Boolean} Erfolgreich
 	 */
 	@Override
 	public boolean performSimpleInsert(String table, Set<String> values) {
-		if(!this.initialized) { return false; }
-		
+		if (!this.initialized) {
+			return false;
+		}
+
 		boolean result = false;
-		
+
 		Iterator<String> it = values.iterator();
-		
+
 		String statementString = "";
-		
-		while(it.hasNext()) {
+
+		while (it.hasNext()) {
 			String s = it.next();
-			
-			if(it.hasNext()) {
+
+			if (it.hasNext()) {
 				statementString = String.format("%s %s,", statementString, s);
 			} else {
 				statementString = String.format("%s %s", statementString, s);
 			}
 		}
-		
+
 		statementString = String.format("INSERT INTO %s VALUES(%s)", table, statementString);
-		
+
 		this.openConnection();
-		
+
 		try {
-            result = this.connection.prepareStatement(statementString).execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-        	this.closeConnection();
-        }
-		
+			result = this.connection.prepareStatement(statementString).execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			this.closeConnection();
+		}
+
 		return result;
 	}
 
 	/**
 	 * UPDATE exekutieren.
+	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param table {@link String} Datenbanktabelle
-	 * @param columns {@link Set} Spalten
-	 * @param values {@link Set} Werte
-	 * @param condition {@link String} Bedingung
+	 * @param table
+	 *            {@link String} Datenbanktabelle
+	 * @param columns
+	 *            {@link Set} Spalten
+	 * @param values
+	 *            {@link Set} Werte
+	 * @param condition
+	 *            {@link String} Bedingung
 	 * @return {@link Boolean} Erfolgreich
 	 */
 	@Override
 	public boolean performUpdate(String table, Set<String> columns, Set<String> values, String condition) {
-		if(!this.initialized) { return false; }
-		
-		if(columns.size() != values.size()) {
+		if (!this.initialized) {
 			return false;
 		}
-		
+
+		if (columns.size() != values.size()) {
+			return false;
+		}
+
 		boolean result = false;
-		
+
 		Iterator<String> it = columns.iterator();
 		Iterator<String> it2 = values.iterator();
-		
+
 		String statementString = "";
-		
-		while(it.hasNext() && it2.hasNext()) {
+
+		while (it.hasNext() && it2.hasNext()) {
 			String s = it.next();
 			String s2 = it2.next();
-			
-			if(it.hasNext() && it2.hasNext()) {
+
+			if (it.hasNext() && it2.hasNext()) {
 				statementString = String.format("%s %s = %s,", statementString, s, s2);
 			} else {
 				statementString = String.format("%s %s = %s", statementString, s, s2);
 			}
 		}
-		
+
 		statementString = String.format("UPDATE %s SET %s WHERE %s", table, statementString, condition);
-		
+
 		this.openConnection();
-		
+
 		try {
-            result = this.connection.prepareStatement(statementString).execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-        	this.closeConnection();
-        }
-		
+			result = this.connection.prepareStatement(statementString).execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			this.closeConnection();
+		}
+
 		return result;
 	}
 
 	/**
 	 * DELETE exekutieren.
+	 * 
 	 * @author Joel Strasser
 	 * @version 2
 	 * @since 1
-	 * @param table {@link String} Datenbanktabelle
-	 * @param condition {@link String} Bedingung
+	 * @param table
+	 *            {@link String} Datenbanktabelle
+	 * @param condition
+	 *            {@link String} Bedingung
 	 * @return {@link Boolean} Erfolgreich
 	 */
 	@Override
 	public boolean performDelete(String table, String condition) {
-		if(!this.initialized) { return false; }
-		
+		if (!this.initialized) {
+			return false;
+		}
+
 		boolean result = false;
-		
+
 		this.openConnection();
-		
+
 		try {
-            result = this.connection.prepareStatement(String.format("DELETE FROM %s WHERE %s", table, condition)).execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-        	this.closeConnection();
-        }
-		
+			result = this.connection.prepareStatement(String.format("DELETE FROM %s WHERE %s", table, condition))
+					.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			this.closeConnection();
+		}
+
 		return result;
 	}
 }

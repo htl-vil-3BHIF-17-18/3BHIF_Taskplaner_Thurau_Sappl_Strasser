@@ -29,14 +29,7 @@ public class TaskTable extends JTable {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
-
-			// public Class getColumnClass(int column) {
-			// switch (column) {
-			// case 0:
-			// return Boolean.class;
-			// default:
-			// return String.class;
-			// }
+			
 		};
 		this.model.setColumnIdentifiers(columNames);
 		this.setDefaultRenderer(Object.class, new TaskTableCellRenderer());

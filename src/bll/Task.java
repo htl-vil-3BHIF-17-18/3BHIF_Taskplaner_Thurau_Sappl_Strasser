@@ -183,18 +183,10 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 		result.add("'" + this.text + "'");
 		result.add("'" + this.typ + "'");
 		result.add("'" + this.fach + "'");
-		// Super hacky hack
-		// In einem Set sind ja keine zwei Daten drin, deswegen ist bei einer Schularbeit,
-		// einem Test nur ein Datum drin.
-		// Mit dieser "Rollator-Variante" passiert das jetzt garantiert nicht mehr!
-		// TODO: Lösungen zum dem Problem? Ist das überhaupt eine Rollator-Lösung? Wäre ne Liste besser?
-		// von thuraua @joestr: suppa Joel-René!
-		// Lösung zum Problem? : Ja; Ist das eine Rollator-Lösung: ich tät sagen das ist eine "Fieberblase";
-		// Liste besser? : Listen sind wie Alkohol, sie machen das Leben nicht besser, aber erträglicher!
-		//				   Tua do nix mehr uma man
 		result.add("to_date('" + this.toVector().get(1) + "', 'dd.mm.yyyy')");
 		LocalDate d = new java.sql.Date(this.datumBis.getTimeInMillis()).toLocalDate();
-		result.add("to_date('" + d.getYear() + "-" + (d.getMonthValue() - 1) + "-" + d.getDayOfMonth() + "', 'yyyy-mm-dd')");
+		result.add("to_date('" + d.getYear() + "-" + (d.getMonthValue() - 1) + "-" + d.getDayOfMonth()
+				+ "', 'yyyy-mm-dd')");
 		return result;
 	}
 

@@ -24,8 +24,9 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 				Integer.parseInt(((String) table.getModel().getValueAt(row, 4)).split("\\.")[0]));
 		GregorianCalendar now = new GregorianCalendar();
 		now.set(GregorianCalendar.MONTH, now.get(GregorianCalendar.MONTH) + 1);
-		
-		//Unterscheidung bei Hausübungen, ob sie gemacht sind, noch gemacht werden können oder ob die Abgabefrist abgelaufen ist
+
+		// Unterscheidung bei Hausübungen, ob sie gemacht sind, noch gemacht werden
+		// können oder ob die Abgabefrist abgelaufen ist
 		if (typ.equalsIgnoreCase("hausübung")) {
 			if (status.equalsIgnoreCase("erledigt")) {
 				comp.setBackground(new Color(126, 247, 134));
@@ -34,10 +35,11 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			} else {
 				comp.setBackground(new Color(247, 243, 126));
 			}
-		//Unterscheidung bei Schularbeiten und Tests, ob man diese hinter sich hat oder nicht
+			// Unterscheidung bei Schularbeiten und Tests, ob man diese hinter sich hat oder
+			// nicht
 		} else {
 			if (datumBis.before(now)) {
-				comp.setBackground(new Color(126, 247, 134));				
+				comp.setBackground(new Color(126, 247, 134));
 			} else {
 				comp.setBackground(new Color(247, 243, 126));
 			}
