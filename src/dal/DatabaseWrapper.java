@@ -127,7 +127,6 @@ public class DatabaseWrapper {
 				new LinkedHashSet<String>(Arrays.asList("done", "text", "type", "subject", "dateFrom", "dateTo")),
 				condition
 				);
-		
 		try {
 			while(rs.next()) {
 				result.add(
