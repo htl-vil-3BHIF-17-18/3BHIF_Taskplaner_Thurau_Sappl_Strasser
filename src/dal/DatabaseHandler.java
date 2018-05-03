@@ -175,7 +175,6 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 				statementString = String.format("%s %s", statementString, s);
 			}
 		}
-
 		statementString = String.format("SELECT %s FROM %s WHERE %s", statementString, table, condition);
 
 		this.openConnection();
@@ -198,7 +197,6 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
 		return crs;
 	}
-
 	/**
 	 * Einfaches SELECT exekutieren.
 	 * @author Joel Strasser
@@ -215,7 +213,6 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 		}
 		return performSelect(table, new HashSet<String>(Arrays.asList("*")), condition);
 	}
-
 	/**
 	 * Erweitertes SELECT exekutieren.
 	 * @author Joel Strasser
@@ -236,7 +233,6 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 		}
 		throw new NotImplementedException();
 	}
-
 	/**
 	 * INSERT exekutieren.
 	 * @author Joel Strasser
@@ -290,7 +286,6 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
 		return result;
 	}
-
 	/**
 	 * Einfaches INSERT exekutieren.
 	 * @author Joel Strasser
@@ -336,7 +331,6 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
 		return result;
 	}
-
 	/**
 	 * UPDATE exekutieren.
 	 * @author Joel Strasser

@@ -189,5 +189,4 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 				+ "', 'yyyy-mm-dd')");
 		return result;
 	}
-
 }
