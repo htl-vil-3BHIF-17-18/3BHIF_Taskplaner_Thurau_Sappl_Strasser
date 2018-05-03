@@ -175,7 +175,7 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 	public Set<String> databaseColumns() {
 		return new LinkedHashSet<String>(Arrays.asList("done", "text", "type", "subject", "dateFrom", "dateTo"));
 	}
-
+	
 	@Override
 	public Set<String> databaseValues() {
 		Set<String> result = new LinkedHashSet<String>();
