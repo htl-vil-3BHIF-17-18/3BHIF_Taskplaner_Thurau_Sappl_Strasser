@@ -330,13 +330,13 @@ public class MainFrame extends JFrame implements ActionListener {
 	private String processUserInput() {
 		GregorianCalendar von = new GregorianCalendar(
 				Integer.valueOf(this.fromDate.getText().split("\\.")[2]),
-				Integer.valueOf(this.fromDate.getText().split("\\.")[1]),
+				Integer.valueOf(this.fromDate.getText().split("\\.")[1]) - 1,
 				Integer.valueOf(this.fromDate.getText().split("\\.")[0])
 		);
 		String typ = (String) this.taskType.getSelectedItem();
 		GregorianCalendar bis = new GregorianCalendar(
 				Integer.valueOf(this.toDate.getText().split("\\.")[2]),
-				Integer.valueOf(this.toDate.getText().split("\\.")[1]),
+				Integer.valueOf(this.toDate.getText().split("\\.")[1]) - 1,
 				Integer.valueOf(this.toDate.getText().split("\\.")[0])
 		);
 		if (typ != "Alle")
