@@ -11,6 +11,7 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.GregorianCalendar;
 import java.util.Set;
 import java.util.TreeSet;
@@ -18,7 +19,6 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -29,7 +29,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.SwingWorker.StateValue;
-import javax.swing.text.MaskFormatter;
 
 import bll.Task;
 import dal.DatabaseHandler;
@@ -49,8 +48,8 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JPanel inputFields;
 	private JComboBox<String> taskType;
 	private JLabel lbFromDate, lbToDate;
-	private JFormattedTextField fromDate;
-	private JFormattedTextField toDate;
+	private DateTextField fromDate;
+	private DateTextField toDate;
 	private JButton showTasks;
 	private JScrollPane scrollPane;
 	private TaskTable table;
@@ -94,8 +93,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		// Input-Fields
 		this.lbFromDate = new JLabel("von: ");
 		this.lbToDate = new JLabel("bis: ");
-		this.fromDate = new JFormattedTextField(new MaskFormatter("##.##.####"));
-		this.toDate = new JFormattedTextField(new MaskFormatter("##.##.####"));
+		this.fromDate = new DateTextField();
+		this.toDate = new DateTextField();
 		this.taskType = new JComboBox<String>(comboBoxTypes);
 		this.showTasks = new JButton("Tasks anzeigen");
 		this.inputFields = new JPanel(new FlowLayout());
@@ -113,6 +112,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.setLayout(new BorderLayout());
 		this.add(inputFields, BorderLayout.PAGE_START);
 		this.add(scrollPane, BorderLayout.CENTER);
+		
+		table.setAutoCreateRowSorter(true);
 
 		// Rechtsklick-Menü:
 		popup = new JPopupMenu();
@@ -313,16 +314,22 @@ public class MainFrame extends JFrame implements ActionListener {
 
 	private String processUserInput() {
 		GregorianCalendar von = new GregorianCalendar(
-				Integer.valueOf(this.fromDate.getText().split("\\.")[2]),
-				Integer.valueOf(this.fromDate.getText().split("\\.")[1]) - 1,
-				Integer.valueOf(this.fromDate.getText().split("\\.")[0])
+				fromDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear(),
+				fromDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getMonthValue() - 1,
+				fromDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfMonth()
 		);
 		String typ = (String) this.taskType.getSelectedItem();
 		GregorianCalendar bis = new GregorianCalendar(
-				Integer.valueOf(this.toDate.getText().split("\\.")[2]),
-				Integer.valueOf(this.toDate.getText().split("\\.")[1]) - 1,
-				Integer.valueOf(this.toDate.getText().split("\\.")[0])
+				toDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear(),
+				toDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getMonthValue() - 1,
+				toDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfMonth()
 		);
+		
+		System.out.println(
+				"GC: " + von.toInstant().toString()
+				+ "SQLD: " + new java.sql.Date(von.getTimeInMillis()).toString()
+		);
+		
 		if (typ != "Alle")
 			return "type = '" + typ + "' AND "
 					+ "dateFrom > to_date('"
