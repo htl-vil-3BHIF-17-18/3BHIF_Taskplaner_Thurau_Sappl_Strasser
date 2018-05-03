@@ -8,10 +8,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 import java.util.GregorianCalendar;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,12 +28,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker.StateValue;
 import javax.swing.text.MaskFormatter;
 
 import bll.Task;
 import dal.DatabaseHandler;
 import dal.DatabaseWrapper;
+import swingworkers.SwingWorkerGetTasks;
+import swingworkers.SwingWorkerGetTasksWithCondition;
+import swingworkers.SwingWorkerSetTasks;
 
 public class MainFrame extends JFrame implements ActionListener {
 
@@ -159,36 +165,152 @@ public class MainFrame extends JFrame implements ActionListener {
 				e.printStackTrace();
 			}
 		} else if (arg0.getSource().equals(this.load)) {
-			SwingUtilities.invokeLater(new Runnable() {
+			SwingWorkerGetTasks swgt = new SwingWorkerGetTasks(dbw);
+			swgt.addPropertyChangeListener(new PropertyChangeListener() {
 				@Override
-				public void run() {
-
-					try {
-						table.setTasks(dbw.getTasks());
-						JOptionPane.showMessageDialog(mainframe, "Laden von DB erfolgreich.", "Information",
-								JOptionPane.INFORMATION_MESSAGE);
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(mainframe, "Laden von DB NICHT erfolgreich.", "Information",
-								JOptionPane.ERROR_MESSAGE);
+				public void propertyChange(PropertyChangeEvent evt) {
+					switch (evt.getPropertyName()) {
+						case "progress":
+							showTasks.setEnabled(false);
+							break;
+						case "state":
+							switch ((StateValue) evt.getNewValue()) {
+								case DONE:
+									try {
+										table.setTasks(swgt.get());
+										showTasks.setEnabled(true);
+										JOptionPane.showMessageDialog(
+												mainframe,
+												"Laden von DB erfolgreich.",
+												"Information",
+												JOptionPane.INFORMATION_MESSAGE
+										);
+									} catch (InterruptedException e) {
+										JOptionPane.showMessageDialog(
+												mainframe,
+												"Laden von DB NICHT erfolgreich.",
+												"Information",
+												JOptionPane.ERROR_MESSAGE
+										);
+									} catch (ExecutionException e) {
+										JOptionPane.showMessageDialog(
+												mainframe,
+												"Laden von DB NICHT erfolgreich.",
+												"Information",
+												JOptionPane.ERROR_MESSAGE
+										);
+									}
+									break;
+								case STARTED:
+									showTasks.setEnabled(false);
+									break;
+								case PENDING:
+									showTasks.setEnabled(false);
+									break;
+							}
+							break;
 					}
 				}
 			});
+			swgt.execute();
 		} else if (arg0.getSource().equals(this.save)) {
-			SwingUtilities.invokeLater(new Runnable() {
+			SwingWorkerSetTasks swst = new SwingWorkerSetTasks(dbw, table.getTasks());
+			swst.addPropertyChangeListener(new PropertyChangeListener() {
 				@Override
-				public void run() {
-					try {
-						dbw.setTasks(table.getTasks());
-						JOptionPane.showMessageDialog(mainframe, "Speichern in DB erfolgreich.", "Information",
-								JOptionPane.INFORMATION_MESSAGE);
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(mainframe, "Speichern in DB NICHT erfolgreich.", "Information",
-								JOptionPane.ERROR_MESSAGE);
+				public void propertyChange(PropertyChangeEvent evt) {
+					switch (evt.getPropertyName()) {
+						case "progress":
+							showTasks.setEnabled(false);
+							break;
+						case "state":
+							switch ((StateValue) evt.getNewValue()) {
+								case DONE:
+									try {
+										swst.get();
+										showTasks.setEnabled(true);
+										JOptionPane.showMessageDialog(
+												mainframe,
+												"Speichern in DB erfolgreich.",
+												"Information",
+												JOptionPane.INFORMATION_MESSAGE
+										);
+									} catch (InterruptedException e) {
+										JOptionPane.showMessageDialog(
+												mainframe,
+												"Speichern in DB NICHT erfolgreich.",
+												"Information",
+												JOptionPane.ERROR_MESSAGE
+										);
+									} catch (ExecutionException e) {
+										JOptionPane.showMessageDialog(
+												mainframe,
+												"Speichern in DB NICHT erfolgreich.",
+												"Information",
+												JOptionPane.ERROR_MESSAGE
+										);
+									}
+									break;
+								case STARTED:
+									showTasks.setEnabled(false);
+									break;
+								case PENDING:
+									showTasks.setEnabled(false);
+									break;
+							}
+							break;
 					}
 				}
 			});
+			swst.execute();
 		} else if (arg0.getSource().equals(this.showTasks)) {
-			this.table.setTasks(this.processUserInput());
+			SwingWorkerGetTasksWithCondition swgt = new SwingWorkerGetTasksWithCondition(dbw, processUserInput());
+			swgt.addPropertyChangeListener(new PropertyChangeListener() {
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					switch (evt.getPropertyName()) {
+						case "progress":
+							showTasks.setEnabled(false);
+							break;
+						case "state":
+							switch ((StateValue) evt.getNewValue()) {
+								case DONE:
+									try {
+										table.setTasks(swgt.get());
+										showTasks.setEnabled(true);
+										JOptionPane.showMessageDialog(
+												mainframe,
+												"Laden von DB erfolgreich.",
+												"Information",
+												JOptionPane.INFORMATION_MESSAGE
+										);
+									} catch (InterruptedException e) {
+										JOptionPane.showMessageDialog(
+												mainframe,
+												"Laden von DB NICHT erfolgreich.",
+												"Information",
+												JOptionPane.ERROR_MESSAGE
+										);
+									} catch (ExecutionException e) {
+										JOptionPane.showMessageDialog(
+												mainframe,
+												"Laden von DB NICHT erfolgreich.",
+												"Information",
+												JOptionPane.ERROR_MESSAGE
+										);
+									}
+									break;
+								case STARTED:
+									showTasks.setEnabled(false);
+									break;
+								case PENDING:
+									showTasks.setEnabled(false);
+									break;
+							}
+							break;
+					}
+				}
+			});
+			swgt.execute();
 		} else if (arg0.getSource().equals(newItem)) {
 			try {
 				new EditDialog(table,
@@ -205,32 +327,33 @@ public class MainFrame extends JFrame implements ActionListener {
 
 	}
 
-	private Set<Task> processUserInput() {
-		GregorianCalendar von = new GregorianCalendar(Integer.valueOf(this.fromDate.getText().split("\\.")[2]),
+	private String processUserInput() {
+		GregorianCalendar von = new GregorianCalendar(
+				Integer.valueOf(this.fromDate.getText().split("\\.")[2]),
 				Integer.valueOf(this.fromDate.getText().split("\\.")[1]),
-				Integer.valueOf(this.fromDate.getText().split("\\.")[0]));
+				Integer.valueOf(this.fromDate.getText().split("\\.")[0])
+		);
 		String typ = (String) this.taskType.getSelectedItem();
-		GregorianCalendar bis = new GregorianCalendar(Integer.valueOf(this.toDate.getText().split("\\.")[2]),
+		GregorianCalendar bis = new GregorianCalendar(
+				Integer.valueOf(this.toDate.getText().split("\\.")[2]),
 				Integer.valueOf(this.toDate.getText().split("\\.")[1]),
-				Integer.valueOf(this.toDate.getText().split("\\.")[0]));
+				Integer.valueOf(this.toDate.getText().split("\\.")[0])
+		);
 		if (typ != "Alle")
-			return this.dbw.getTasks(
-					"type = '" + typ + "' AND "
+			return "type = '" + typ + "' AND "
 					+ "dateFrom > to_date('"
 						+ new java.sql.Date(von.getTimeInMillis()).toString()
 					+ "', 'yyyy-mm-dd') AND "
 					+ "dateFrom < to_date('"
 						+ new java.sql.Date(bis.getTimeInMillis()).toString()
-					+ "', 'yyyy-mm-dd')");
+					+ "', 'yyyy-mm-dd')";
 		else
-			return this.dbw.getTasks(
-					"dateFrom > to_date('"
+			return "dateFrom > to_date('"
 							+ new java.sql.Date(von.getTimeInMillis()).toString()
 					+ "', 'yyyy-mm-dd') AND "
 					+ "dateFrom < to_date('"
 						+ new java.sql.Date(bis.getTimeInMillis()).toString()
-					+ "', 'yyyy-mm-dd')"
-			);
+					+ "', 'yyyy-mm-dd')";
 	}
 
 	class PopupListener extends MouseAdapter {
