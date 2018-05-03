@@ -9,7 +9,6 @@ import java.util.Set;
  * Wird von der Klasse {@linkplain DatabaseWrapper} gebraucht.
  */
 public interface DatabaseMapable {
-
 	/**
 	 * Gibt eine {@linkplain Map} zurück, welche Datenbankspaltennamen zum internen Feldnamen auflöst.
 	 * @deprecated Ist nicht mehr zu gebrauchen.
