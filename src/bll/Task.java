@@ -19,8 +19,8 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 	private GregorianCalendar datumBis;
 	private String text;
 
-	public Task(boolean erledigt, GregorianCalendar datumVon, String fach, String typ, GregorianCalendar datumBis,
-			String text) {
+	public Task(boolean erledigt, GregorianCalendar datumVon, String fach, String typ, 
+			GregorianCalendar datumBis, String text) {
 		super();
 		this.erledigt = erledigt;
 		this.datumVon = datumVon;
