@@ -58,7 +58,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JMenuItem newItem;
 	private JMenuItem edit;
 	private JMenuItem delete;
-	private static String[] comboBoxTypes = { "Alle", "Schularbeit", "Test", "Hausübung" };
+	private static String[] comboBoxTypes = { "Alle", "Schularbeit", "Test", "HausÃ¼bung" };
 	private DatabaseHandler dbh = null;
 	private DatabaseWrapper dbw = null;
 
@@ -84,7 +84,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	}
 
 	private void initializeControls() throws ParseException {
-		// Menü-Kram
+		// MenÃ¼-Kram
 		this.menuBar = new JMenuBar();
 		this.start = new JMenu("Start");
 		this.load = new JMenuItem("Von DB laden");
@@ -109,17 +109,17 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.inputFields.add(taskType);
 		this.inputFields.add(showTasks);
 
-		// Testdaten für GUI:
+		// Testdaten fÃ¼r GUI:
 		Set<Task> set = new TreeSet<Task>();
 
 		/*
 		 * set.add(new Task(false, new GregorianCalendar(2018, 4, 20), "POS",
-		 * "Hausübung", new GregorianCalendar(2018, 5, 5),
+		 * "HausÃ¼bung", new GregorianCalendar(2018, 5, 5),
 		 * "Taskplaner implementieren")); set.add(new Task(false, new
-		 * GregorianCalendar(2018, 4, 25), "TINF", "Hausübung", new
-		 * GregorianCalendar(2018, 4, 26), "Übung 13785")); set.add(new Task(true, new
+		 * GregorianCalendar(2018, 4, 25), "TINF", "HausÃ¼bung", new
+		 * GregorianCalendar(2018, 4, 26), "Ãœbung 13785")); set.add(new Task(true, new
 		 * GregorianCalendar(2018, 4, 26), "Deutsch", "Schularbeit", new
-		 * GregorianCalendar(2018, 4, 26), "Textbezogene Erörterung")); set.add(new
+		 * GregorianCalendar(2018, 4, 26), "Textbezogene ErÃ¶rterung")); set.add(new
 		 * Task(false, new GregorianCalendar(2018, 5, 26), "SYP", "Test", new
 		 * GregorianCalendar(2018, 5, 26), "nix"));
 		 */
@@ -130,16 +130,16 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.add(inputFields, BorderLayout.PAGE_START);
 		this.add(scrollPane, BorderLayout.CENTER);
 
-		// Rechtsklick-Menü:
+		// Rechtsklick-MenÃ¼:
 		popup = new JPopupMenu();
-		delete = new JMenuItem("Löschen");
+		delete = new JMenuItem("LÃ¶schen");
 		edit = new JMenuItem("Bearbeiten");
 		newItem = new JMenuItem("Neu");
 		popup.add(newItem);
 		popup.add(edit);
 		popup.add(delete);
 
-		// EventListener für Rechtsklick:
+		// EventListener fÃ¼r Rechtsklick:
 		MouseListener popupListener = new PopupListener(popup);
 		this.table.addMouseListener(popupListener);
 
@@ -314,7 +314,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		} else if (arg0.getSource().equals(newItem)) {
 			try {
 				new EditDialog(table,
-						new Task(false, new GregorianCalendar(), "", "Hausübung", new GregorianCalendar(), ""), true);
+						new Task(false, new GregorianCalendar(), "", "HausÃ¼bung", new GregorianCalendar(), ""), true);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

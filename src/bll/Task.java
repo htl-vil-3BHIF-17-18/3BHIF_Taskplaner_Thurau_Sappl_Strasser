@@ -19,8 +19,8 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 	private GregorianCalendar datumBis;
 	private String text;
 
-	public Task(boolean erledigt, GregorianCalendar datumVon, String fach, String typ, GregorianCalendar datumBis,
-			String text) {
+	public Task(boolean erledigt, GregorianCalendar datumVon, String fach, String typ, 
+			GregorianCalendar datumBis, String text) {
 		super();
 		this.erledigt = erledigt;
 		this.datumVon = datumVon;
@@ -175,7 +175,7 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 	public Set<String> databaseColumns() {
 		return new LinkedHashSet<String>(Arrays.asList("done", "text", "type", "subject", "dateFrom", "dateTo"));
 	}
-
+	
 	@Override
 	public Set<String> databaseValues() {
 		Set<String> result = new LinkedHashSet<String>();
@@ -189,5 +189,4 @@ public class Task implements DatabaseMapable, Comparable<Task> {
 				+ "', 'yyyy-mm-dd')");
 		return result;
 	}
-
 }
