@@ -1,4 +1,4 @@
-package dal;
+package bll;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,7 +7,7 @@ import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import bll.Task;
+import dal.DatabaseHandler;
 
 /**
  * DatabaseWrapper-Klasse
@@ -15,7 +15,7 @@ import bll.Task;
  * Baut auf den {@linkplain DatabaseHandler} auf.
  * @author Joel Strasser
  */
-public class DatabaseWrapper {
+public class DatabaseTaskWrapper {
 
 	DatabaseHandler databaseHandler = null;
 	
@@ -24,8 +24,18 @@ public class DatabaseWrapper {
 	 * @author Joel Strasser
 	 * @param databaseHandler {@linkplain DatabaseHandler} DatabaseHandler
 	 */
-	public DatabaseWrapper(DatabaseHandler databaseHandler) {
+	public DatabaseTaskWrapper(DatabaseHandler databaseHandler) {
 		this.databaseHandler = databaseHandler;
+	}
+	
+	/**
+	 * DatabaseWrapper-Konstruktur
+	 * @author Joel Strasser
+	 * @param connectionString {@linkplain DatabaseHandler} Verbindungsstring
+	 */
+	public DatabaseTaskWrapper(String connectionString) {
+		this.databaseHandler = new DatabaseHandler(connectionString);
+		this.databaseHandler.initialize();
 	}
 	
 	/**

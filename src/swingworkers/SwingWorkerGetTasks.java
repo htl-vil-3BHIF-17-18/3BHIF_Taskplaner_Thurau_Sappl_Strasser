@@ -4,14 +4,14 @@ import java.util.Set;
 
 import javax.swing.SwingWorker;
 
+import bll.DatabaseTaskWrapper;
 import bll.Task;
-import dal.DatabaseWrapper;
 
 public class SwingWorkerGetTasks extends SwingWorker<Set<Task>, String> {
 
-	DatabaseWrapper dbw = null;
+	DatabaseTaskWrapper dbw = null;
 	
-	public SwingWorkerGetTasks(final DatabaseWrapper dbw) {
+	public SwingWorkerGetTasks(final DatabaseTaskWrapper dbw) {
 		this.dbw = dbw;
 	}
 	

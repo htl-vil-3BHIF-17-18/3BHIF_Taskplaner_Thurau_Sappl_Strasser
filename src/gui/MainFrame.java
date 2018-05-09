@@ -10,6 +10,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.time.ZoneId;
 import java.util.GregorianCalendar;
@@ -30,12 +32,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.SwingWorker.StateValue;
 
+import bll.DatabaseTaskWrapper;
 import bll.Task;
-import dal.DatabaseHandler;
-import dal.DatabaseWrapper;
 import swingworkers.SwingWorkerGetTasks;
 import swingworkers.SwingWorkerGetTasksWithCondition;
 import swingworkers.SwingWorkerSetTasks;
+import util.PropertyManager;
 
 public class MainFrame extends JFrame implements ActionListener {
 
@@ -58,8 +60,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JMenuItem edit;
 	private JMenuItem delete;
 	private static String[] comboBoxTypes = { "Alle", "Schularbeit", "Test", "Hausübung" };
-	private DatabaseHandler dbh = null;
-	private DatabaseWrapper dbw = null;
+	private DatabaseTaskWrapper dbw = null;
 
 	public MainFrame(String title) {
 		super();
@@ -69,9 +70,13 @@ public class MainFrame extends JFrame implements ActionListener {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		this.dbh = new DatabaseHandler("jdbc:oracle:thin:d3b20/d3b@212.152.179.117:1521:ora11g");
-		this.dbh.initialize();
-		this.dbw = new DatabaseWrapper(dbh);
+		try {
+			this.dbw = new DatabaseTaskWrapper(PropertyManager.getInstance().readProperty("ConnectionString"));
+		} catch (FileNotFoundException e) {
+			System.out.println("Config-File not found!");
+		} catch (IOException e) {
+			System.out.println("An IO-Exception occured!");
+		}
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setPreferredSize(new Dimension(700, 500));
 		this.pack();

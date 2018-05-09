@@ -2,13 +2,13 @@ package swingworkers;
 
 import javax.swing.SwingWorker;
 
-import dal.DatabaseWrapper;
+import bll.DatabaseTaskWrapper;
 
 public class SwingWorkerCreateTasksTable extends SwingWorker<Boolean, String> {
 
-	DatabaseWrapper dbw = null;
+	DatabaseTaskWrapper dbw = null;
 	
-	public SwingWorkerCreateTasksTable(final DatabaseWrapper dbw) {
+	public SwingWorkerCreateTasksTable(final DatabaseTaskWrapper dbw) {
 		this.dbw = dbw;
 	}
 	

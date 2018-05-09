@@ -7,7 +7,6 @@ import java.util.Set;
 public abstract class AbstractDatabaseHandler {
 		
 	public AbstractDatabaseHandler(String connectionString) { };
-	
 	public abstract boolean initialize();
 	
 	protected abstract boolean openConnection();

@@ -3,10 +3,12 @@ package dal;
 import java.util.Map;
 import java.util.Set;
 
+import bll.DatabaseTaskWrapper;
+
 /**
  * DatabaseMapable-Interface
  * <br />
- * Wird von der Klasse {@linkplain DatabaseWrapper} gebraucht.
+ * Wird von der Klasse {@linkplain DatabaseTaskWrapper} gebraucht.
  */
 public interface DatabaseMapable {
 	/**
