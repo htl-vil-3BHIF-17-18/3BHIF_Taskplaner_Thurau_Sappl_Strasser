@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Set;
 import java.util.TreeSet;
@@ -98,8 +99,13 @@ public class MainFrame extends JFrame implements ActionListener {
 		// Input-Fields
 		this.lbFromDate = new JLabel("von: ");
 		this.lbToDate = new JLabel("bis: ");
-		this.fromDate = new DatePicker();
-		this.toDate = new DatePicker();
+		
+		// Zum äbändern des Formats mindestends einmal den speziellen Konstruktor aufrufen.
+		new DatePicker("dd/MM/yyyy", new Date());
+		
+		this.fromDate = new DatePicker(new Date());
+		this.toDate = new DatePicker(new Date());
+		
 		this.taskType = new JComboBox<String>(comboBoxTypes);
 		this.showTasks = new JButton("Tasks anzeigen");
 		this.inputFields = new JPanel(new FlowLayout());
