@@ -50,8 +50,8 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JPanel inputFields;
 	private JComboBox<String> taskType;
 	private JLabel lbFromDate, lbToDate;
-	private DateTextField fromDate;
-	private DateTextField toDate;
+	private DatePicker fromDate;
+	private DatePicker toDate;
 	private JButton showTasks;
 	private JScrollPane scrollPane;
 	private TaskTable table;
@@ -98,8 +98,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		// Input-Fields
 		this.lbFromDate = new JLabel("von: ");
 		this.lbToDate = new JLabel("bis: ");
-		this.fromDate = new DateTextField();
-		this.toDate = new DateTextField();
+		this.fromDate = new DatePicker();
+		this.toDate = new DatePicker();
 		this.taskType = new JComboBox<String>(comboBoxTypes);
 		this.showTasks = new JButton("Tasks anzeigen");
 		this.inputFields = new JPanel(new FlowLayout());

@@ -31,7 +31,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class DateTextField extends JTextField {
+public class DatePicker extends JTextField {
 	
 	private static final long serialVersionUID = -8405987972494413756L;
 	private static String DEFAULT_DATE_FORMAT = "MM/dd/yyyy";
@@ -42,16 +42,16 @@ public class DateTextField extends JTextField {
     private DatePanel datePanel = null;
     private JDialog dateDialog = null;
 
-    public DateTextField() {
+    public DatePicker() {
         this(new Date());
     }
 
-    public DateTextField(String dateFormatPattern, Date date) {
+    public DatePicker(String dateFormatPattern, Date date) {
         this(date);
         DEFAULT_DATE_FORMAT = dateFormatPattern;
     }
 
-    public DateTextField(Date date) {
+    public DatePicker(Date date) {
         setDate(date);
         setEditable(false);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -73,7 +73,7 @@ public class DateTextField extends JTextField {
 
     private void showDateDialog(DatePanel dateChooser, Point position) {
         Frame owner = (Frame) SwingUtilities
-                .getWindowAncestor(DateTextField.this);
+                .getWindowAncestor(DatePicker.this);
         if (dateDialog == null || dateDialog.getOwner() != owner) {
             dateDialog = createDateDialog(owner, dateChooser);
         }
