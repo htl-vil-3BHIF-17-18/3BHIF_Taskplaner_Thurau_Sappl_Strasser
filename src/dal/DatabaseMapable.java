@@ -3,8 +3,6 @@ package dal;
 import java.util.Map;
 import java.util.Set;
 
-import bll.DatabaseTaskWrapper;
-
 /**
  * DatabaseMapable-Interface
  * <br />
