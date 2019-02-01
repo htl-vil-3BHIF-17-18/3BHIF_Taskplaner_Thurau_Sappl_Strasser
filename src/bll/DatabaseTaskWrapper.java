@@ -39,7 +39,7 @@ public class DatabaseTaskWrapper {
 	}
 	
 	/**
-	 * Datenbanktabelle für Klasse {@linkplain Task} erstellen.
+	 * Datenbanktabelle fÃ¼r Klasse {@linkplain Task} erstellen.
 	 * @author Joel Strasser
 	 * @return {@linkplain Boolean} Erfolgreich
 	 */
@@ -56,7 +56,7 @@ public class DatabaseTaskWrapper {
 	}
 	
 	/**
-	 * Ein {@linkplain Set} mit {@linkplain Task}s in die Datenebanktabelle speichern.
+	 * Ein {@linkplain Set} mit {@linkplain Task}s in die Datenbanktabelle speichern.
 	 * @author Joel Strasser
 	 * @param tasks {@linkplain Set} Set mit Tasks
 	 * @return {@linkplain Boolean} Erfolgreich
@@ -78,7 +78,7 @@ public class DatabaseTaskWrapper {
 	}
 	
 	/**
-	 * Ein {@linkplain Set} mit {@linkplain Task}s von der Datenebank bekommen.
+	 * Ein {@linkplain Set} mit {@linkplain Task}s von der Datenbank bekommen.
 	 * @author Joel Strasser
 	 * @return tasks {@linkplain Set} Set mit Tasks
 	 */
@@ -122,8 +122,8 @@ public class DatabaseTaskWrapper {
 	}
 	
 	/**
-	 * Ein {@linkplain Set} mit {@linkplain Task}s von der Datenebank bekommen,
-	 * welche eine bestimmte Bedingung erfüllen.
+	 * Ein {@linkplain Set} mit {@linkplain Task}s von der Datenbank bekommen,
+	 * welche eine bestimmte Bedingung erfÃ¼llen.
 	 * @author Joel Strasser
 	 * @param condition {@linkplain String} Bedingung
 	 * @return tasks {@linkplain Set} Set mit Tasks
